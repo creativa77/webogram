@@ -231,7 +231,7 @@ gulp.task('watch', ['server', 'less'], function() {
   livereload.listen({ basePath: 'app' });
   gulp.watch('app/css/*.css', ['watchcss']);
   gulp.watch('app/less/**/*.less', ['less']);
-  gulp.watch('app/partials/**/*.html', ['watchhtml']);
+  gulp.watch('app/partials/**/*.html', ['templates', 'watchhtml']);
 });
 
 gulp.task('server', function(done) {
