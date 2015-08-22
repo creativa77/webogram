@@ -11,91 +11,27 @@
 
   <!-- hide'em all -->
   <div ng-hide="videoUnavailable" >
+    <span>ABOVE</span>
 
-    <!-- Header -->
-    <nav id="topBar" class="navbar navbar-default navbar-fixed-top" >
-      <div class="container-fluid">
+    <!-- Top "selfies" row -->
+    <div class="row" data-ng-show="showParticipantsPanel">
+      <div class="col-xs-28 col-sm-30 col-lg-34 participants">
 
-        <div class="top-row" > <!-- This avoids a glich in the height of the top row when showing/hidding the password or paticipants row -->
-
-          <!-- Password prompt -->
-          <div class="row " data-ng-show="showPasswordPanel">
-            <div class="col-xs-36">
-              <br />
-              <form ng-submit="connect()" class="form-inline">
-                <div class="form-group center-block">
-                  <label for="room-password" class="control-label" required>Room password:</label>
-                  <input id="room-password" type="password" ng-model="roomPassword" class="form-control" name="password" data-ng-disabled="authInProgress">
-                </div>
-                <button class="btn btn-default btn-primary" type="submit" >Connect</button>
-              </form>
-
-            </div>
-          </div>
-
-          <!-- Top "selfies" row -->
-          <div class="row" data-ng-show="showParticipantsPanel">
-            <div class="col-xs-28 col-sm-30 col-lg-34 participants">
-
-              <!-- Me -->
-              <div class="participant">
-                <video autoplay style="display: none" width="640" height="480" ></video>
-                <canvas id="self" width="70" height="50" class="img-rounded img-snapshot" ng-hide="videolessMode"></canvas>
-                <form ng-submit="setMyNickname()">
-                  <input id="myNickname" placeholder="No name" ng-model="myNickname" class="nickname" ng-blur="setMyNickname()" data-ng-disabled="! connected" />
-                </form>
-              </div>
-
-              <!-- Each participant -->
-              <div ng-repeat="participant in participants" class="participant">
-                <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
-                <input placeholder="No name" ng-model="participant.nickname" value="{{participant.nickname}}" ng-disabled="true" class="nickname"></input>
-              </div>
-            </div>
-
-          </div>
+        <!-- Me -->
+        <div class="participant">
+          <video autoplay style="display: none" width="640" height="480" ></video>
+          <canvas id="self" width="70" height="50" class="img-rounded img-snapshot" ng-hide="videolessMode"></canvas>
         </div>
 
-      </div>
-    </nav>
-
-    <!-- Footer -->
-    <nav id="bottomBar" class="navbar navbar-default navbar-fixed-bottom botom-bar" role="footer" >
-      <div class="container-fluid">
-        <div class="row actions-bar" >
-          <div class="col-xs-30" data-ng-show="showActionsPanel" > <!-- TODO: Once this is true, it stays like that. Angular has something that can help with this in the latest beta version -->
-            <button ng-click="snoozeVideo()" class="btn btn-warning" data-ng-disabled="! connected">Snooze</button>
-            <button ng-click="killVideo()" class="btn btn-danger" data-ng-disabled="! connected">Kill Video</button>
-            <!-- Button trigger modal -->
-            <button class="btn btn-info"  data-ng-disabled="! connected" data-toggle="modal" data-target="#configDialog">
-              Configure
-            </button>
-
-            <div class="btn-group dropup">
-              <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" data-ng-disabled="! connected">Alert settings<span class="caret"></span></button>
-              <ul class="dropdown-menu">
-                <li><a href="#" ng-click="setAlertMode('silent')">Silent</a></li>
-                <li><a href="#" ng-click="setAlertMode('loud')">Loud</a></li>
-                <li><a href="#" ng-click="setAlertMode('default')">Default</a></li>
-              </ul>
-            </div>
-            <button type="button" ng-click="toggleFaceTracking()" class="btn btn-primary ft-button" data-toggle="button" title="Use Face tracking" data-ng-disabled="! connected">Use FT</button>
-          </div>
-
-          <div class="col-xs-6 pull-right text-right" >
-            <a href="/" class="btn btn-default" title="Leave room" >Home</a>
-          </div>
-        </div>
-        <div class="row status-row" >
-          <div class="col-xs-33" >
-            <div>Status: {{ status }}</div>
-          </div>
-          <div class="col-xs-3" >
-            <div data-ng-show="connected" class="ping">Latency: {{ping}} ms</div>
-          </div>
+        <!-- Each participant -->
+        <div ng-repeat="participant in participants" class="participant">
+          <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
         </div>
       </div>
-    </nav>
+
+    </div>
+
+    <span>BELOW</span>
 
     <!-- Configuration modal dialog. The content is loaded from partials/config.html -->
     <!-- div ng-include="'partials/desktop/immedia_config.html'"></div -->
