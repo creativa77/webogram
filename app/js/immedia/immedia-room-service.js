@@ -208,10 +208,19 @@
       return cfgSvc.getNickname(_roomName);
     };
 
+    $rootScope.$on('message', function(scope, msg) {
+      console.log('XXXX onMessage!!!');
+      var msgId2 = msg.peerId + ":" + msg.timestamp;
+      storage.snapshotsByMessageId[msgId2] = msg;
+      console.log('XXXX Received immedia picture for msg id = ' + msg.msgId2);
+      console.dir(storage.snapshotsByMessageId);
+      console.dir(msg);
+    });
+
     this.sendSnapshot = function(data) {
       var URL = canvas.toDataURL();
       var msg = {
-        timestamp: new Date().getTime(),
+        timestamp: data.date,
         peerId: data.peerId,
         messageId: data.messageId,
         image: URL
@@ -219,8 +228,11 @@
       this.sendMessage(msg);
 
       // Add to the hash list
-      storage.snapshotsByMessageId[data.messageId] = msg;
+      var msgId2 = msg.peerId + ":" + msg.timestamp;
+      storage.snapshotsByMessageId[msgId2] = msg;
+      console.log('XXXX storing outgoing message: ' + msgId2);
       console.dir(storage.snapshotsByMessageId);
+      console.dir(msg);
     };
 
     this.getImageUrl = function(messageId) {
