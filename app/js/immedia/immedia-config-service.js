@@ -12,15 +12,21 @@
       rooms: {}
     });
 
-    var configuration = {};
-
     var geOrCreateConf = function(room) {
-      if (!configuration[room]) {
-        configuration[room] = {
-          securedRoom: false
+      if (!storage.rooms[room]) {
+        storage.rooms[room] = {
+          awarenessEnabled: false
         };
       }
-      return configuration[room];
+      return storage.rooms[room];
+    };
+
+    this.setAwarenessEnabled = function(room, value /*boolean*/) {
+      geOrCreateConf(room).awarenessEnabled = value;
+    };
+
+    this.isAwarenessEnabled = function(room) {
+      return geOrCreateConf(room).awarenessEnabled;
     };
 
     this.isConfigured = function(room) {
@@ -29,10 +35,6 @@
 
     this.setConfiguration = function(room, conf) {
       configuration[room] = conf;
-    };
-
-    this.isRoomSecured = function(room) {
-      return geOrCreateConf(room).securedRoom === true;
     };
 
     this.isDefaultStartFT = function(room) {

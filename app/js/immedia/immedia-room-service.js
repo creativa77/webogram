@@ -122,13 +122,6 @@
     this.enterRoom = function() {
       console.log("Entering room");
 
-      if ( cfgSvc.isRoomSecured(_roomName) ) {
-        if (! _roomPassword ) { //We don't have a password yet
-          $rootScope.$broadcast('password-required');
-          return;
-        }
-      }
-
       transport.send("sub", {password:_roomPassword}, function(err, data) {
         //TODO: Check for error msgs
         if ( data && data.success === true ) {

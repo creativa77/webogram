@@ -10,7 +10,7 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
   .directive('myImmediaPrescence', function() {
     return {
       restrict: 'AE',
-      templateUrl: templateUrl('immedia_prescence'),
+      templateUrl: templateUrl('../immedia_prescence'),
       controller: 'RoomCtrl'
     };
   })
