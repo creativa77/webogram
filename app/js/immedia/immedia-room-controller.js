@@ -19,8 +19,6 @@
     // Internal / status / private variables
     var canvas = $('#self')[0];                 // canvas on which snapshots are being drawn
     var updateIntervalPromise = undefined;
-    var unreadMessages = 0;
-    var alertAudio = null;
     var connectedRooms = {};
 
     //Checks for room change
@@ -34,20 +32,13 @@
       $scope.roomName = roomId;
 
       if (cfgSvc.isAwarenessEnabled(roomId)) {
-      //  $scope.showAwarenessPanel = true;
-        //roomSvc.connect($scope.roomName, undefined //$scope.roomPassword);
         if (!connectedRooms[roomId]) {
           startWebcam(function(){
+            connectedRooms[roomId] = true;
             //Don't connect to the room until the user accepts the video feed
             $scope.connect(roomId);
-            connectedRooms[roomId] = true;
           });
-        } else {
-          //$scope.showParticipantsPanel = true;
         }
-      } else {
-        //$scope.showAwarenessPanel = false;
-        //$scope.showParticipantsPanel = false;
       }
     });
 
@@ -124,7 +115,6 @@
     });
 
     var updateRoom = function() {
-      console.log("Update room");
       roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: $scope.myNickname });
     };
 
@@ -171,17 +161,6 @@
     $scope.killVideo = function() {
       $scope.immediaSnapshots.stopVideo();
       $scope.videolessMode = true;
-    };
-
-    /**
-     * Triggered by clicking on the different alert modes
-     */
-    $scope.setAlertMode = function(mode) {
-      if ( mode == "silent") {
-        alertAudio = null;
-      } else {
-        alertAudio = null; //new Audio('/audio/' + mode + '.ogg');
-      }
     };
 
     $scope.toggleFaceTracking = function() {
