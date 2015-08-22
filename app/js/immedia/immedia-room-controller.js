@@ -87,19 +87,10 @@
     $scope.$on("connected", function() {
       //Participants are added/removed from this array by the RoomService, no action required
       $scope.participants = roomSvc.getParticipants();
-      $scope.myNickname = roomSvc.getNickname();
 
       //Send my info to the server
       updateRoom();
 
-      //Get existing messages
-      /*$scope.status = "Fetching existing messages";
-      roomSvc.getAvailableMessages(function(err, data) {
-        $scope.connected = true;
-        $scope.messages = data;
-        $scope.status = "Connected to room";
-      });
-      */
       if (! angular.isDefined(updateIntervalPromise)) {
         //Update the rest with my status every 5 seconds
         updateIntervalPromise = $interval(updateRoom, 1000*5);
@@ -136,15 +127,6 @@
         },cb);
     }
 
-    // Submit when you press Enter on the input.
-    // It is on keydown and default is prevented to avoid adding the enter to the message
-    $scope.keydown = function(ev) {
-      if(ev && ev.keyCode == 13) {
-        ev.preventDefault();
-        $scope.sendMessage();
-      }
-    };
-
     //-------------- Action functions ------------------//
 
     /**
@@ -174,12 +156,6 @@
       updateRoom();
       focusChatInputEl();
     };
-
-    /*startWebcam(function(){
-      //Don't connect to the room until the user accepts the video feed
-      $scope.connect();
-    });
-    */
   }]);
 
 }());
