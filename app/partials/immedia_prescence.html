@@ -11,12 +11,6 @@
 
   <!-- hide'em all -->
   <div ng-hide="videoUnavailable" >
-    <div class="row">
-      <div class="col-xs-34">
-        <button ng-click="enableAwareness()" data-ng-hide="showAwarenessPanel()">Enable awareness</button>
-        <button ng-click="disableAwareness()" data-ng-show="showAwarenessPanel()">Disable awareness</button>
-      </div>
-    </div>
 
     <!-- Top "selfies" row -->
     <div class="row" data-ng-show="showParticipantsPanel()">
@@ -31,6 +25,12 @@
         <!-- Each participant -->
         <div ng-repeat="participant in participants" class="participant">
           <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
+        </div>
+
+        <!-- enable/diable buttons -->
+        <div class="enable-disable-awareness">
+          <button ng-click="enableAwareness()" data-ng-hide="showAwarenessPanel()">Enable awareness</button>
+          <button ng-click="disableAwareness()" data-ng-show="showAwarenessPanel()">Disable awareness</button>
         </div>
       </div>
 
