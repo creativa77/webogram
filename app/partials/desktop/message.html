@@ -33,7 +33,7 @@
       <i ng-if="::historyMessage.unread &amp;&amp; historyMessage.out || historyMessage.pending || false" class="icon-message-status" ng-class="{'icon-message-status-unread': historyMessage.unread, 'icon-message-status-pending': historyMessage.pending}" ng-show="!historyMessage.error"></i>
 
       <!-- a class="im_message_from_photo pull-left" my-peer-photolink="::historyMessage.from_id" img-class="im_message_from_photo"></a -->
-      <a class="im_message_from_photo immedia pull-left" my-immedia-message-picture from-id="historyMessage.from_id" msg-id="historyMessage.id" img-class="im_message_from_photo immedia"></a>
+      <a class="im_message_from_photo immedia pull-left" my-immedia-message-picture from-id="historyMessage.from_id" msg-date="historyMessage.date" img-class="im_message_from_photo immedia"></a>
       <div class="im_message_meta pull-right text-right">
         <i class="icon-message-status-tick"></i>
         <span class="im_message_date" ng-bind="::historyMessage.date | time"></span>

@@ -1764,6 +1764,9 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
           message.id = sentMessage.id;
           message.media = sentMessage.media;
 
+          console.log('XXXX sentMessage');
+          console.dir(sentMessage);
+
           ApiUpdatesManager.processUpdateMessage({
             _: 'updates',
             users: [],

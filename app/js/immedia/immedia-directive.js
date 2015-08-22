@@ -32,7 +32,13 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         switch (update._) {
           // NOTE: This is called both for new outgoing and new incoming messages
           case 'updateNewMessage':
-            roomService.sendSnapshot({ peerId: update.message.from_id, messageId: update.message.id });
+            if (update.message.out) {
+              roomService.sendSnapshot({
+                peerId: update.message.from_id,
+                messageId: update.message.id,
+                date: update.message.date
+              });
+            }
             break;
         }
       });
@@ -55,11 +61,13 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
     function link($scope, element, attrs) {
       var imgEl = $('<img class="' + (attrs.imgClass || '') + '">')
 
-      $scope.$watch(attrs.msgId, updatePicture);
+      $scope.$watch('historyMessage.id', updatePicture);
 
       function updatePicture(messageId) {
+        var msgId2 = $scope.$eval('historyMessage.from_id + \':\' + historyMessage.date');
+        console.log('XXXX rendering message in list msgId2: ' + msgId2);
         imgEl.remove();
-        imgEl.prependTo(element).attr('src', roomService.getImageUrl(messageId));
+        imgEl.prependTo(element).attr('src', roomService.getImageUrl(msgId2));
       };
     };
 
