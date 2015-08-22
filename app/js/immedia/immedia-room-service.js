@@ -8,7 +8,8 @@
 
   console.log('xxx service');
 
-  immediaServices.service('RoomService', ['$rootScope', '$interval', 'TransportService', 'ConfigService', function($rootScope, $interval, transport, cfgSvc) {
+  immediaServices.service('RoomService', ['$rootScope', '$interval', 'TransportService', 'ConfigService', '$localStorage',
+                          function($rootScope, $interval, transport, cfgSvc, $localStorage) {
     var _roomPassword;
     var _sessionId;
     var _roomName;
@@ -18,6 +19,13 @@
     var that = this;
     var TRACE = false;
     var TRACE_GC = false;
+
+    // JAC TODO: Move this fully from the controller to here
+    var canvas;
+
+    var storage = $localStorage.$default({
+      snapshotsByMessageId: {}
+    });
 
     $interval(function(){
       var staleThreshold  = new Date().getTime() - 10 * 1000; //10 Seconds
@@ -205,6 +213,30 @@
 
     this.getNickname = function() {
       return cfgSvc.getNickname(_roomName);
+    };
+
+    this.sendSnapshot = function(data) {
+      var URL = canvas.toDataURL();
+      var msg = {
+        timestamp: new Date().getTime(),
+        peerId: data.peerId,
+        messageId: data.messageId,
+        image: URL
+      };
+      this.sendMessage(msg);
+
+      // Add to the hash list
+      storage.snapshotsByMessageId[data.messageId] = msg;
+      console.dir(storage.snapshotsByMessageId);
+    };
+
+    this.getImageUrl = function(messageId) {
+      var snapshot = storage.snapshotsByMessageId[messageId];
+      return snapshot && snapshot.image;
+    };
+
+    this.setCanvas = function(theCanvas) {
+      canvas = theCanvas;
     };
 
     transport.onmessage = handleMessage;
