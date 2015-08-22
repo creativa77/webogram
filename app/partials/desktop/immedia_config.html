@@ -1,0 +1,52 @@
+
+<div class="modal fade" id="configDialog" ng-controller="ConfigCtrl" tabindex="-1" role="dialog" aria-labelledby="configDialogLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="configDialogLabel">Configuration</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="container-fluid config-panel">
+          <div class="form-group">
+            <form class="form-inline" role="form" ng-submit="saveConfig()" >
+
+              <div class="row" >
+                <div class="col-xs-30" >Room is secured</div>
+                <div class="col-xs-6" >
+                  <input type="radio" name="roomSecured" ng-model="roomSecured" value="0">No
+                  <input type="radio" name="roomSecured" ng-model="roomSecured" value="1" >Yes
+                </div>
+              </div>
+
+              <div class="row" ng-show="roomSecured">
+                <div class="col-xs-24" >&gt; Room password</div>
+                <div class="col-xs-12 text-right" >
+                  <button type="button" class="btn btn-warning" ng-hide="promptPassword" ng-click="changePassword()">Change password</button>
+                  <input type="password" ng-show="promptPassword" >
+                </div>
+              </div>
+
+              <div class="row" >
+                <div class="col-xs-30" >Start face tracking when entering the room</div>
+                <div class="col-xs-6" >
+                  <input type="radio" name="defaultStartFT" ng-model="defaultStartFT" value="0">No
+                  <input type="radio" name="defaultStartFT" ng-model="defaultStartFT" value="1">Yes
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>  <!-- Container -->
+
+      </div> <!-- modal body -->
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="saveChanges()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
