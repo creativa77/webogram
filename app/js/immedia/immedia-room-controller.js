@@ -18,6 +18,8 @@
     $scope.ping                   = "N/A";      // Last ping time
     // Internal / status / private variables
     var canvas = $('#self')[0];                 // canvas on which snapshots are being drawn
+    roomSvc.setCanvas(canvas);
+
     var updateIntervalPromise = undefined;
     var connectedRooms = {};
 
