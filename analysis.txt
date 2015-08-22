@@ -1,0 +1,6 @@
+Rendering of message images:
+- app/partials/desktop/message.html L49 --> my-user-photollink="historyMessage.fwd_from_id"
+- app/js/directives.js L2678 --> setPeerID( <value of historyMessage.fwd_from_id> )
+
+Capturing sent messages and their IDs:
+- app/js/services.js L1689  --> sendText
