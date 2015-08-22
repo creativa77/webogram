@@ -5,11 +5,12 @@
 
 /* Directives */
 
-angular.module('immedia', [])
+angular.module('immedia', ['immediaControllers'])
 
   .directive('myImmediaPrescence', function() {
     return {
       restrict: 'AE',
-      templateUrl: templateUrl('immedia_prescence')
+      templateUrl: templateUrl('immedia_prescence'),
+      controller: 'RoomCtrl'
     };
   });
