@@ -145,18 +145,11 @@
 
     $rootScope.$on("opened", function(scope) {
         console.log("Transport is ready!");
-
         if ( ! cfgSvc.isConfigured(_roomName) ) {
           console.log("Reading room configuration");
 
-          transport.send("get-conf", {}, function(err, data) {
-            if ( err ) { //TODO: Error handling
-              console.log("Error looking for room configuration", err);
-              return;
-            }
-            cfgSvc.setConfiguration(_roomName, data);
-
-            that.enterRoom();
+          cfgSvc.setConfiguration(_roomName, {
+            securedRoom: false
           });
         } else {
           that.enterRoom();
