@@ -10,7 +10,7 @@
 
   immediaControllers.controller('RoomCtrl', ['$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($scope, $sce, $window, $routeParams, $interval, roomSvc) {
     $scope.connected = false;                   // Connected/Disconnected from the room
-    $scope.roomName = 'ekuton'; //$routeParams.roomName    // Name of the room, taken from the URL
+    $scope.roomName = $routeParams.p;           // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
     $scope.status = "Starting...";              // Status message
     $scope.showPasswordPanel      = false;      // Shows the password prompt panel. Don't set at the same time with showParticipantsPanel
