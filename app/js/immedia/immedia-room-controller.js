@@ -29,7 +29,13 @@
 
     //Checks for room change
     $rootScope.$on('chat_update', function(evt, roomId) {
+      if ($scope.roomName === roomId) {
+        return;
+      }
+
       $scope.roomName = roomId;
+      console.warn("Room set to", $scope.roomName);
+      roomSvc.connect($scope.roomName, undefined /*$scope.roomPassword*/);
     });
 
     var leaveRoom = function() {

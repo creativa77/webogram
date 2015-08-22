@@ -14,8 +14,17 @@
 
     var configuration = {};
 
-    this.isConfigured = function(room) {
+    var geOrCreateConf = function(room) {
+      if (!configuration[room]) {
+        configuration[room] = {
+          securedRoom: false
+        };
+      }
       return configuration[room];
+    };
+
+    this.isConfigured = function(room) {
+      return geOrCreateConf(room);
     };
 
     this.setConfiguration = function(room, conf) {
@@ -23,15 +32,15 @@
     };
 
     this.isRoomSecured = function(room) {
-      return configuration[room].securedRoom === true;
+      return geOrCreateConf(room).securedRoom === true;
     };
 
     this.isDefaultStartFT = function(room) {
-      return configuration[room].defaultStartFT === true;
+      return geOrCreateConf(room).defaultStartFT === true;
     };
 
     this.getConfiguration = function(roomName) {
-      return configuration[room];
+      return geOrCreateConf(room);
     };
 
     this.setNickname = function(roomName, nickname) {
