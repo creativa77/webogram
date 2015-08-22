@@ -8,9 +8,9 @@
 
   console.log('xxx controller');
 
-  immediaControllers.controller('RoomCtrl', ['$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($scope, $sce, $window, $routeParams, $interval, roomSvc) {
+  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc) {
     $scope.connected = false;                   // Connected/Disconnected from the room
-    $scope.roomName = $routeParams.roomName;    // Name of the room, taken from the URL
+    $scope.roomName = $routeParams.p;           // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
     $scope.status = "Starting...";              // Status message
     $scope.showPasswordPanel      = false;      // Shows the password prompt panel. Don't set at the same time with showParticipantsPanel
@@ -27,19 +27,16 @@
     var unreadMessages = 0;
     var alertAudio = null;
 
-    //Updates the page title
-    var updateTitle = function() {
-      if ( unreadMessages > 0 ) {
-        $window.document.title = "[" + unreadMessages + "] " + $scope.messages[0].text;
-      } else {
-        $window.document.title = "Immedia: " + $scope.roomName;
+    //Checks for room change
+    $rootScope.$on('chat_update', function(evt, roomId) {
+      if ($scope.roomName === roomId) {
+        return;
       }
-    };
 
-    $window.onfocus = function(ev) { // Reset the counter of unreaded messages
-      unreadMessages= 0;
-      updateTitle();
-    };
+      $scope.roomName = roomId;
+      console.warn("Room set to", $scope.roomName);
+      roomSvc.connect($scope.roomName, undefined /*$scope.roomPassword*/);
+    });
 
     var leaveRoom = function() {
       console.log("Leaving room...");
@@ -166,7 +163,6 @@
 
       if(!sendByCurrentUser){
         unreadMessages++;
-        updateTitle();
 
         if ( alertAudio ) {
           alertAudio.play();
@@ -255,9 +251,6 @@
       updateRoom();
       focusChatInputEl();
     };
-
-    //int main() {
-    updateTitle();
 
     $scope.status = "Requesting access to webcam...";
 
