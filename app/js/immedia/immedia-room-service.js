@@ -6,8 +6,6 @@
 
   var immediaServices = angular.module('immediaServices');
 
-  console.log('xxx service');
-
   immediaServices.service('RoomService', ['$rootScope', '$interval', 'TransportService', 'ConfigService', '$localStorage',
                           function($rootScope, $interval, transport, cfgSvc, $localStorage) {
     var _roomPassword;
