@@ -8,34 +8,47 @@
 
   console.log('xxx controller');
 
-  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc) {
+  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', 'ConfigService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc) {
     $scope.connected = false;                   // Connected/Disconnected from the room
-    $scope.roomName = $routeParams.p;           // Id of the room, taken from the URL
+    $scope.roomName = undefined;               // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
-    $scope.status = "Starting...";              // Status message
-    $scope.showPasswordPanel      = false;      // Shows the password prompt panel. Don't set at the same time with showParticipantsPanel
-    $scope.showParticipantsPanel  = false;      // Shows the participans panel. Don't set at the same time with showParticipantsPanel
-    $scope.showActionsPanel       = undefined;  // Shows the lower buttons panel. This is just to initially hide the buttons. It never goes "false" again
-    $scope.roomPassword;                        // The password typed
-    $scope.videolessMode = false;               // Hides others' videos if webcam is off
-    $scope.videoUnavailable = undefined;        // When the user doesn't accept ( or there is a problem with acquiring video )
-    $scope.authInProgress         = false;      // Is an authentication process going on?
+    $scope.videolessMode          = false;      // Hides others' videos if webcam is off
+    $scope.videoUnavailable       = undefined;  // When the user doesn't accept ( or there is a problem with acquiring video )
+    $scope.enteringInProgress     = false;      // Is an authentication process going on?
     $scope.ping                   = "N/A";      // Last ping time
     // Internal / status / private variables
     var canvas = $('#self')[0];                 // canvas on which snapshots are being drawn
     var updateIntervalPromise = undefined;
     var unreadMessages = 0;
     var alertAudio = null;
+    var connectedRooms = {};
 
     //Checks for room change
-    $rootScope.$on('chat_update', function(evt, roomId) {
+    $scope.$watchCollection('curDialog', function(dialog) {
+      var roomId = dialog.peer;
+
       if ($scope.roomName === roomId) {
         return;
       }
 
       $scope.roomName = roomId;
-      console.warn("Room set to", $scope.roomName);
-      roomSvc.connect($scope.roomName, undefined /*$scope.roomPassword*/);
+
+      if (cfgSvc.isAwarenessEnabled(roomId)) {
+      //  $scope.showAwarenessPanel = true;
+        //roomSvc.connect($scope.roomName, undefined //$scope.roomPassword);
+        if (!connectedRooms[roomId]) {
+          startWebcam(function(){
+            //Don't connect to the room until the user accepts the video feed
+            $scope.connect(roomId);
+            connectedRooms[roomId] = true;
+          });
+        } else {
+          //$scope.showParticipantsPanel = true;
+        }
+      } else {
+        //$scope.showAwarenessPanel = false;
+        //$scope.showParticipantsPanel = false;
+      }
     });
 
     var leaveRoom = function() {
@@ -54,34 +67,33 @@
 
     //If Tab is closed or URL changed to something out of this world, also disconnect transport
     $window.onbeforeunload = function() {
+      console.warn("TODO: DISCONNECT FROM ALL ROOMS");
       leaveRoom();
 
       roomSvc.disconnect();
     };
 
-    //Google Analytics, once the page is loaded
-    $scope.$on('$viewContentLoaded', function() {
-      $window.ga('send', 'pageview', { page: "Room#" + $scope.roomName });
-    });
+    $scope.connect = function(roomId) {
+      roomSvc.connect(roomId);
+    };
 
-    $scope.$on("password-required", function() {
-      $scope.showPasswordPanel = true;
-      $scope.authInProgress = false;
-      $scope.status = "Room is protected. Type in password.";
-    });
+    $scope.enableAwareness = function() {
+      cfgSvc.setAwarenessEnabled($scope.roomName, true);
+    };
 
-    $scope.connect = function() {
-      $scope.authInProgress = true;
-      $scope.status = "Connecting to room...";
-      roomSvc.connect($scope.roomName, $scope.roomPassword);
+    $scope.disableAwareness = function() {
+      cfgSvc.setAwarenessEnabled($scope.roomName, false);
+    };
+
+    $scope.showAwarenessPanel = function() {
+      return cfgSvc.isAwarenessEnabled($scope.roomName);
+    };
+
+    $scope.showParticipantsPanel = function() {
+      return cfgSvc.isAwarenessEnabled($scope.roomName);
     };
 
     $scope.$on("connected", function() {
-      $scope.showParticipantsPanel = true; // Show the participants panel
-      $scope.showPasswordPanel = false; // Hide the password panel
-      $scope.showActionsPanel = true;
-      $scope.authInProgress = false;
-
       //Participants are added/removed from this array by the RoomService, no action required
       $scope.participants = roomSvc.getParticipants();
       $scope.myNickname = roomSvc.getNickname();
@@ -90,20 +102,20 @@
       updateRoom();
 
       //Get existing messages
-      $scope.status = "Fetching existing messages";
+      /*$scope.status = "Fetching existing messages";
       roomSvc.getAvailableMessages(function(err, data) {
         $scope.connected = true;
         $scope.messages = data;
         $scope.status = "Connected to room";
-        if (! angular.isDefined(updateIntervalPromise)) {
-          //Update the rest with my status every 5 seconds
-          updateIntervalPromise = $interval(updateRoom, 1000*5);
-        }
       });
+      */
+      if (! angular.isDefined(updateIntervalPromise)) {
+        //Update the rest with my status every 5 seconds
+        updateIntervalPromise = $interval(updateRoom, 1000*5);
+      }
     });
 
     $scope.$on("disconnected", function() {
-      $scope.status = "Disconnected from room";
       $scope.connected = false;
       if (angular.isDefined(updateIntervalPromise)) {
           $interval.cancel(updateIntervalPromise);
@@ -111,64 +123,10 @@
       }
     });
 
-    $scope.$on("message", function(scope, msg) {
-      addMessages([msg], false);
-    });
-
-    $scope.$on("failed-auth", function(scope, msg) {
-      $scope.needsPassword = true;
-      $scope.authInProgress = false;
-      $scope.status = "Failed authentication: " + msg;
-      $scope.$digest();
-    });
-
-    $scope.sendMessage = function() {
-      // Gather webcamshot to send with message
-      var URL = canvas.toDataURL();
-
-      // Send message to server
-      var msg = {
-        timestamp: new Date().getTime(),
-        text: $scope.inputText,
-        image: URL,
-        nickname: $scope.myNickname
-      };
-
-      roomSvc.sendMessage(msg);
-
-      $('textarea').val('');
-      $scope.inputText = "";
-
-      // Add it to the list locally
-      addMessages([msg], true);
-    };
-
     var updateRoom = function() {
+      console.log("Update room");
       roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: $scope.myNickname });
     };
-
-    /**
-     * Adds the message to the data model (which is in turn automatically rendered
-     * through Angular.js bindings)
-     */
-    function addMessages(msgs, sendByCurrentUser) {
-      // Insert the new message to the top of the list of messages
-      $scope.messages = msgs.concat($scope.messages);
-
-      // Crop the list of in-memory (and rendered) messages to a fixed maximum size
-      var max_rows = 40; // Max number of rows hardcoded here
-      if($scope.messages.length > max_rows) {
-        $scope.messages.splice(max_rows,$scope.messages.length - max_rows);
-      }
-
-      if(!sendByCurrentUser){
-        unreadMessages++;
-
-        if ( alertAudio ) {
-          alertAudio.play();
-        }
-      }
-    }
 
     function startWebcam(cb) {
 
@@ -182,10 +140,9 @@
 
       $scope.immediaSnapshots.start(
         function(err) {
-          $scope.status = 'Error getting user media: ' + err;
           $scope.videoUnavailable = true;
           $scope.$digest();
-          console.log("failed to start video...");
+          console.log("failed to start video...", err);
         },cb);
     }
 
@@ -223,7 +180,7 @@
       if ( mode == "silent") {
         alertAudio = null;
       } else {
-        alertAudio = new Audio('/audio/' + mode + '.ogg');
+        alertAudio = null; //new Audio('/audio/' + mode + '.ogg');
       }
     };
 
@@ -233,35 +190,17 @@
 
     //-------------- Directives|Filters functions ------------------//
 
-    $scope.setHtmlToTrusted = function(html_code) {
-      return $sce.trustAsHtml(html_code);
-    };
-
-    /**
-     * Focuses the chat input element after .3 second
-     */
-    var focusChatInputEl = function() {
-      setTimeout(function() {
-        $('#chat-input-element').focus();
-      }, 300);
-    };
-
     $scope.setMyNickname = function() {
       roomSvc.setNickname($scope.myNickname);
       updateRoom();
       focusChatInputEl();
     };
 
-    $scope.status = "Requesting access to webcam...";
-
-    //TODO: Load from conf
-    $scope.setAlertMode("default");
-
-    startWebcam(function(){
+    /*startWebcam(function(){
       //Don't connect to the room until the user accepts the video feed
       $scope.connect();
     });
-
+    */
   }]);
 
 }());
