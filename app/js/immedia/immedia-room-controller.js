@@ -6,8 +6,6 @@
 
   var immediaControllers = angular.module('immediaControllers');
 
-  console.log('xxx controller');
-
   immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', 'ConfigService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc) {
     $scope.connected = false;                   // Connected/Disconnected from the room
     $scope.roomName = undefined;               // Id of the room, taken from the URL
