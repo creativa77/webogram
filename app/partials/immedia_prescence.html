@@ -13,17 +13,17 @@
   <div ng-hide="videoUnavailable" >
 
     <!-- Top "selfies" row -->
-    <div class="row" data-ng-show="showParticipantsPanel()">
+    <div class="row">
       <div class="col-xs-28 col-sm-30 col-lg-34 participants">
 
         <!-- Me -->
-        <div class="participant">
+        <div class="participant" data-ng-show="showParticipantsPanel()">
           <video autoplay style="display: none" width="640" height="480" ></video>
           <canvas id="self" width="70" height="50" class="img-rounded img-snapshot" ng-hide="videolessMode"></canvas>
         </div>
 
         <!-- Each participant -->
-        <div ng-repeat="participant in participants" class="participant">
+        <div ng-repeat="participant in participants" class="participant" data-ng-show="showParticipantsPanel()">
           <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
         </div>
 
