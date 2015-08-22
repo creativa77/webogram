@@ -11,10 +11,15 @@
 
   <!-- hide'em all -->
   <div ng-hide="videoUnavailable" >
-    <span>ABOVE</span>
+    <div class="row">
+      <div class="col-xs-34">
+        <button ng-click="enableAwareness()" data-ng-hide="showAwarenessPanel()">Enable awareness</button>
+        <button ng-click="disableAwareness()" data-ng-show="showAwarenessPanel()">Disable awareness</button>
+      </div>
+    </div>
 
     <!-- Top "selfies" row -->
-    <div class="row" data-ng-show="showParticipantsPanel">
+    <div class="row" data-ng-show="showParticipantsPanel()">
       <div class="col-xs-28 col-sm-30 col-lg-34 participants">
 
         <!-- Me -->
@@ -30,10 +35,5 @@
       </div>
 
     </div>
-
-    <span>BELOW</span>
-
-    <!-- Configuration modal dialog. The content is loaded from partials/config.html -->
-    <!-- div ng-include="'partials/desktop/immedia_config.html'"></div -->
   </div>
 </div>
