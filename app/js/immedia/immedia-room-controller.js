@@ -8,7 +8,7 @@
 
   console.log('xxx controller');
 
-  immediaControllers.controller('RoomCtrl', ['$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($scope, $sce, $window, $routeParams, $interval, roomSvc) {
+  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc) {
     $scope.connected = false;                   // Connected/Disconnected from the room
     $scope.roomName = $routeParams.p;           // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
@@ -27,19 +27,10 @@
     var unreadMessages = 0;
     var alertAudio = null;
 
-    //Updates the page title
-    var updateTitle = function() {
-      if ( unreadMessages > 0 ) {
-        $window.document.title = "[" + unreadMessages + "] " + $scope.messages[0].text;
-      } else {
-        $window.document.title = "Immedia: " + $scope.roomName;
-      }
-    };
-
-    $window.onfocus = function(ev) { // Reset the counter of unreaded messages
-      unreadMessages= 0;
-      updateTitle();
-    };
+    //Checks for room change
+    $rootScope.$on('chat_update', function(evt, roomId) {
+      $scope.roomName = roomId;
+    });
 
     var leaveRoom = function() {
       console.log("Leaving room...");
@@ -166,7 +157,6 @@
 
       if(!sendByCurrentUser){
         unreadMessages++;
-        updateTitle();
 
         if ( alertAudio ) {
           alertAudio.play();
@@ -255,9 +245,6 @@
       updateRoom();
       focusChatInputEl();
     };
-
-    //int main() {
-    updateTitle();
 
     $scope.status = "Requesting access to webcam...";
 
