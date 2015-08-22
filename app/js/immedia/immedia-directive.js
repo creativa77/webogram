@@ -56,10 +56,8 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
       var imgEl = $('<img class="' + (attrs.imgClass || '') + '">')
 
       $scope.$watch(attrs.msgId, updatePicture);
-      updatePicture(attrs.msgId);
 
       function updatePicture(messageId) {
-        console.log('XXXX '+ messageId);
         imgEl.remove();
         imgEl.prependTo(element).attr('src', roomService.getImageUrl(messageId));
       };
