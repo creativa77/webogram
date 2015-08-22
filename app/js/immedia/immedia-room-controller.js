@@ -21,7 +21,7 @@
     var updateIntervalPromise = undefined;
     var connectedRooms = {};
 
-    //Checks for room change
+    //Checks for room selection change
     $scope.$watchCollection('curDialog', function(dialog) {
       var roomId = dialog.peer;
 
@@ -36,7 +36,7 @@
           startWebcam(function(){
             connectedRooms[roomId] = true;
             //Don't connect to the room until the user accepts the video feed
-            $scope.connect(roomId);
+            roomSvc.connect(roomId);
           });
         }
       }
@@ -62,10 +62,6 @@
       leaveRoom();
 
       roomSvc.disconnect();
-    };
-
-    $scope.connect = function(roomId) {
-      roomSvc.connect(roomId);
     };
 
     $scope.enableAwareness = function() {
@@ -110,7 +106,6 @@
     };
 
     function startWebcam(cb) {
-
       // Start the snapshot component
       $scope.immediaSnapshots = new ImmediaTracker($('video')[0], canvas,
        {
