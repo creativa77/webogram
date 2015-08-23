@@ -67,15 +67,24 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
 
     function link($scope, element, attrs) {
       var imgEl = $('<img class="' + (attrs.imgClass || '') + '">')
+      var immediaAnchor = element.find('.im_message_from_photo.immedia')
+      var originalAnchor = element.find('.im_message_from_photo.no-immedia')
 
       $scope.$watch('historyMessage.id', updatePicture);
       $scope.$on('message', updatePicture);
 
       function updatePicture() {
-        var msgId2 = $scope.$eval('historyMessage.from_id + \':\' + historyMessage.date');
-        console.log('XXXX rendering message in list msgId2: ' + msgId2);
         imgEl.remove();
-        imgEl.prependTo(element).attr('src', roomService.getImageUrl(msgId2));
+        var msgId2 = $scope.$eval('historyMessage.from_id + \':\' + historyMessage.date');
+        var imgUrl = roomService.getImageUrl(msgId2);
+        if (imgUrl != undefined) {
+          immediaAnchor.show();
+          originalAnchor.hide();
+          imgEl.prependTo(immediaAnchor).attr('src', imgUrl);
+        } else {
+          immediaAnchor.hide();
+          originalAnchor.show();
+        }
       };
     };
 
