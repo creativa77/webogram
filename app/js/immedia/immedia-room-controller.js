@@ -45,6 +45,7 @@
     var leaveRoom = function() {
       console.log("Leaving room...");
       $scope.immediaSnapshots.stopVideo();
+      $scope.immediaSnapshots = null;
       $interval.cancel(updateIntervalPromise);
       roomSvc.leaveRoom();
     };
@@ -66,10 +67,24 @@
 
     $scope.enableAwareness = function() {
       cfgSvc.setAwarenessEnabled($scope.roomName, true);
+
+      if (!connectedRooms[$scope.roomName]) {
+        startWebcam(function(){
+          connectedRooms[$scope.roomName] = true;
+          //Don't connect to the room until the user accepts the video feed
+          roomSvc.connect($scope.roomName);
+        });
+      }
     };
 
     $scope.disableAwareness = function() {
       cfgSvc.setAwarenessEnabled($scope.roomName, false);
+
+      $scope.immediaSnapshots && $scope.immediaSnapshots.stopVideo();
+
+      roomSvc.disconnect();
+
+      delete connectedRooms[$scope.roomName];
     };
 
     $scope.showAwarenessPanel = function() {
