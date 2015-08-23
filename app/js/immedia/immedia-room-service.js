@@ -179,7 +179,7 @@
     };
 
     this.disconnect = function() {
-      transport.disconnect();
+      transport.disconnect(true);
     };
 
     this.sendMessage = function(msg) {

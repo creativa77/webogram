@@ -15,13 +15,23 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
     };
   })
 
-  .directive('myImmediaSendMessage', ['$rootScope','RoomService', function($rootScope, roomService) {
+  .directive('myImmediaSendMessage', ['$rootScope','RoomService', 'ConfigService',
+             function($rootScope, roomService, configService) {
     return {
       restrict: 'AE',
       link: link
     };
 
     function link($scope, element, attrs) {
+
+      // Keeps track of the currently selected roomm
+      var currentRoomId;
+      $scope.$watchCollection('curDialog', function(dialog) {
+        currentRoomId = dialog.peer;
+        // if (cfgSvc.isAwarenessEnabled(roomId)) {
+        console.log('xxx current room:' + currentRoomId);
+      });
+
 
       /*
       $scope.$on('ui_message_before_send', function() {
@@ -32,7 +42,8 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         switch (update._) {
           // NOTE: This is called both for new outgoing and new incoming messages
           case 'updateNewMessage':
-            if (update.message.out) {
+            if (update.message.out && currentRoomId &&
+                configService.isAwarenessEnabled(currentRoomId)) {
               roomService.sendSnapshot({
                 peerId: update.message.from_id,
                 messageId: update.message.id,
