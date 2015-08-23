@@ -207,10 +207,9 @@
     };
 
     $rootScope.$on('message', function(scope, msg) {
-      console.log('XXXX onMessage!!!');
       var msgId2 = msg.peerId + ":" + msg.timestamp;
       storage.snapshotsByMessageId[msgId2] = msg;
-      console.log('XXXX Received immedia picture for msg id = ' + msg.msgId2);
+      console.log('XXXX Received immedia picture for msg id = ' + msgId2);
       console.dir(storage.snapshotsByMessageId);
       console.dir(msg);
     });
