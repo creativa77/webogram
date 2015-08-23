@@ -211,9 +211,6 @@
     $rootScope.$on('message', function(scope, msg) {
       var msgId2 = msg.peerId + ":" + msg.timestamp;
       storage.snapshotsByMessageId[msgId2] = msg;
-      console.log('XXXX Received immedia picture for msg id = ' + msgId2);
-      console.dir(storage.snapshotsByMessageId);
-      console.dir(msg);
     });
 
     this.sendSnapshot = function(data) {
@@ -229,9 +226,6 @@
       // Add to the hash list
       var msgId2 = msg.peerId + ":" + msg.timestamp;
       storage.snapshotsByMessageId[msgId2] = msg;
-      console.log('XXXX storing outgoing message: ' + msgId2);
-      console.dir(storage.snapshotsByMessageId);
-      console.dir(msg);
     };
 
     this.getImageUrl = function(messageId) {
