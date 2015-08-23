@@ -43,6 +43,13 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         }
       });
 
+      // Detect empty messages and add a dummy text to get Telegram to send anyway
+      $scope.$on('ui_message_before_send', function(scope) {
+        if($scope.draftMessage.text == "") {
+          $scope.draftMessage.text = '-';
+        };
+      });
+
       // This gives the temporary ID only
       // broadcasted from services.js L1796 before the message is sent
       /*
