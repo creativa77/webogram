@@ -187,13 +187,8 @@
         reconnect = false;
       }
 
-      if (sockjs || connected ) {
-        if ( sockjs ) {
-          sockjs.close();
-        }
-        connected = false;
-        $rootScope.$broadcast('disconnected');
-      }
+      sockjs && sockjs.close();
+      $rootScope.$broadcast('disconnected');
       sockjs = null;
     };
 

@@ -20,7 +20,7 @@
 function ImmediaTracker(video, canvas, options) {
   this.options = $.extend(
     {
-	snapshotInterval: 500, //Interval in which snapshots are taken and displayed
+	      snapshotInterval: 500, //Interval in which snapshots are taken and displayed
         useFaceTracking: true,
         startWithFaceTracking: true,
         showDebugMarkers: false,
