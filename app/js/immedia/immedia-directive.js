@@ -62,8 +62,9 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
       var imgEl = $('<img class="' + (attrs.imgClass || '') + '">')
 
       $scope.$watch('historyMessage.id', updatePicture);
+      $scope.$on('message', updatePicture);
 
-      function updatePicture(messageId) {
+      function updatePicture() {
         var msgId2 = $scope.$eval('historyMessage.from_id + \':\' + historyMessage.date');
         console.log('XXXX rendering message in list msgId2: ' + msgId2);
         imgEl.remove();
