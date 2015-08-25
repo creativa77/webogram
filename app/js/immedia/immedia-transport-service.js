@@ -139,7 +139,7 @@
       roomName = room_name;
 
       //start connection
-      sockjs = new SockJS('http://immedia.herokuapp.com/ws', null, {debug: true});
+      sockjs = new SockJS('https://immedia.herokuapp.com/ws', null, {debug: true});
 
       sockjs.onclose  = function() {
         sockjs = null;
