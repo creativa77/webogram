@@ -1814,7 +1814,8 @@ a.md_modal_list_peer_name{color:inherit}
 .md_photo_loading{display:block;width:72px;height:72px;border-radius:36px;overflow:hidden;background:#48769b;text-align:center;line-height:72px;padding:0}
 .md_photo_loading i{display:inline-block;background:#fff;width:8px;height:8px;border-radius:4px;vertical-align:middle;border:0;margin-left:6px}
 .md_photo_loading i:first-child{margin-left:0}
-.im_grouped_short .im_message_from_photo.immedia{display:block;border-radius:4px;width:70px;height:50px;margin-left:-25px}
+.im_grouped_short .im_message_from_photo.immedia{display:block}
+.im_message_from_photo.immedia{border-radius:4px;width:70px;height:50px;margin-left:-25px}
 .participants .participant{float:left;margin:3px}
 .participants .participant .nickname{display:block;padding:4px 3px 3px;width:70px;height:25px;border:1px solid #ccc;background:#f9f9f9;font-size:12px;border-radius:4px;margin-top:2px}
 .participants .participant #myNickname{font-weight:700;font-size:12px}
