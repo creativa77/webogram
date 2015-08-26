@@ -11,8 +11,27 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
     return {
       restrict: 'AE',
       templateUrl: templateUrl('immedia_presence'),
-      controller: 'RoomCtrl'
+      controller: 'RoomCtrl',
+      link: link
     };
+
+    function link($scope, element, attrs) {
+
+      // HACK to adjust the history height to account for presence header and avoid
+      // getting duplicate scrollbars
+      // Idea: detect when height was calculated and updated by the awareness header
+      // height (currently hardcoded to 61px)
+      var adjustedHeight;
+      $scope.$watch(
+        function() { return $('.im_history_wrap')[0].style.height; },
+        function(newValue, oldValue) {
+          if (newValue != adjustedHeight) {
+            adjustedHeight = (parseInt(newValue) - 61) + "px";
+            $('.im_history_wrap')[0].style.height = adjustedHeight;
+          }
+        }
+      );
+    }
   })
 
   .directive('myImmediaSendMessage', ['$rootScope','RoomService', 'ConfigService',
