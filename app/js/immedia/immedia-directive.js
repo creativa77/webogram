@@ -73,10 +73,18 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         }
       });
 
-      // Detect empty messages and add a dummy text to get Telegram to send anyway
+      // Detect empty messages
       $scope.$on('ui_message_before_send', function(scope) {
         if($scope.draftMessage.text == "") {
-          $scope.draftMessage.text = '-';
+
+          // Insert and send the latest snapshot as a blob
+          $('canvas')[0].toBlob(function(blob) {
+            $scope.draftMessage.isMedia = true;
+            $scope.draftMessage.files = [blob];
+          });
+
+          // Add a dummy text to force send
+          // $scope.draftMessage.text = '-';
         };
       });
 
