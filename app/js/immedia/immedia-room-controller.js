@@ -6,7 +6,18 @@
 
   var immediaControllers = angular.module('immediaControllers');
 
-  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', 'ConfigService', function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc) {
+  immediaControllers.controller('RoomCtrl', ['$rootScope',
+    '$scope',
+    '$sce',
+    '$window',
+    '$routeParams',
+    '$interval',
+    'RoomService',
+    'ConfigService',
+    'AppUsersManager',
+
+    function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc, AppUsersManager) {
+
     $scope.connected = false;                   // Connected/Disconnected from the room
     $scope.roomName = undefined;               // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
@@ -116,8 +127,10 @@
       }
     });
 
+
     var updateRoom = function() {
-      roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: $scope.myNickname });
+      var username = AppUsersManager.getSelf().username;
+      roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: username });
     };
 
     function startWebcam(cb) {
