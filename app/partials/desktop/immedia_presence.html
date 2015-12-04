@@ -25,7 +25,7 @@
         <!-- Each participant -->
         <div ng-repeat="participant in participants" class="participant" data-ng-show="showParticipantsPanel()">
           <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
-          <p>{{participant.nickname}}</p>
+          <p class="photo-caption">{{participant.nickname}}</p>
         </div>
 
         <!-- enable/diable buttons -->
