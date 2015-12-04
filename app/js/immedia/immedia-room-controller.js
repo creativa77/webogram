@@ -6,20 +6,12 @@
 
   var immediaControllers = angular.module('immediaControllers');
 
-  immediaControllers.controller('RoomCtrl', ['$rootScope',
-    '$scope',
-    '$sce',
-    '$window',
-    '$routeParams',
-    '$interval',
-    'RoomService',
-    'ConfigService',
-    'AppUsersManager',
+  immediaControllers.controller('RoomCtrl', ['$rootScope', '$scope', '$sce', '$window', '$routeParams', '$interval', 'RoomService', 'ConfigService', 'AppUsersManager',
 
-    function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc, AppUsersManager) {
+    function($rootScope, $scope, $sce, $window, $routeParams, $interval, roomSvc, cfgSvc, appUsersManager) {
 
     $scope.connected = false;                   // Connected/Disconnected from the room
-    $scope.roomName = undefined;               // Id of the room, taken from the URL
+    $scope.roomName = undefined;                // Id of the room, taken from the URL
     $scope.participants;                        // Available participants
     $scope.videolessMode          = false;      // Hides others' videos if webcam is off
     $scope.videoUnavailable       = undefined;  // When the user doesn't accept ( or there is a problem with acquiring video )
@@ -128,7 +120,7 @@
     });
 
     var updateRoom = function() {
-      var username = AppUsersManager.getSelf().username;
+      var username = appUsersManager.getSelf().username;
       roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: username });
     };
 
