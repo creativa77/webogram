@@ -127,7 +127,6 @@
       }
     });
 
-
     var updateRoom = function() {
       var username = AppUsersManager.getSelf().username;
       roomSvc.update({ image: canvas.toDataURL(), timestamp: new Date().getTime(), nickname: username });
