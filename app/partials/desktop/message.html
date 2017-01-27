@@ -30,7 +30,10 @@
       </a>
       <i ng-if="::historyMessage.pFlags.unread &amp;&amp; historyMessage.pFlags.out || historyMessage.pending || false" class="icon-message-status" ng-show="!historyMessage.error"></i>
 
-      <a class="im_message_from_photo pull-left" my-peer-photolink="::historyMessage.fromID" img-class="im_message_from_photo"></a>
+      <div my-immedia-message-picture>
+        <a class="im_message_from_photo no-immedia pull-left" my-peer-photolink="::historyMessage.from_id" img-class="im_message_from_photo"></a>
+        <a class="im_message_from_photo immedia pull-left" from-id="historyMessage.from_id" msg-date="historyMessage.date" img-class="im_message_from_photo immedia"></a>
+      </div>
 
       <div class="im_message_meta pull-right text-right noselect">
         <div class="im_message_views_wrap" ng-if="::!historyMessage.fwdFromID && historyMessage.views > 0">
@@ -78,4 +81,3 @@
   </div>
 
 </div>
-
