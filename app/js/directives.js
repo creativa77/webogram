@@ -1466,7 +1466,11 @@ angular.module('myApp.directives', ['myApp.filters'])
         if (footerHeight) {
           footerHeight++ // Border bottom
         }
-        var historyH = $($window).height() - bottomPanelWrap.offsetHeight - (headWrap ? headWrap.offsetHeight : 48) - footerHeight
+        var historyH = $($window).height()
+        - bottomPanelWrap.offsetHeight
+        - (headWrap ? headWrap.offsetHeight : 48)
+        - footerHeight
+        - 75 // immedia(lbosch): related to immedia height, couldn't find a direct relation
         $(historyWrap).css({
           height: historyH
         })
