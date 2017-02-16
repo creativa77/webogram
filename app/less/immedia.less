@@ -1,0 +1,66 @@
+.immedia-presence {
+  height: 150px; // this allows for two rows of pics
+  overflow-y: auto;
+}
+/* Override Webogram styles: always show images next to messages */
+.im_grouped_short .im_message_from_photo.immedia {
+  display: block;
+}
+
+.im_message_from_photo.immedia {
+  border-radius: 4px;
+  width: 70px;
+  height: 50px;
+  margin-left: -25px;
+}
+
+.photo-caption {
+  font-size: 9px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.participants .participant {
+  float: left;
+  margin: 3px;
+}
+
+.participants .participant .nickname {
+  border: none;
+  display: block;
+  padding: 3px;
+  padding-top: 4px;
+  width: 70px;
+  height: 25px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.participants .participant #myNickname {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.participants .participant .nickname:hover {
+  border: 1px solid #ccc;
+  background: #fdfdfd;
+}
+
+.participants .participant .nickname:focus {
+  border: 1px solid #111;
+  color: #666;
+  background: #fff;
+}
+
+.participants .participant .nickname:disabled {
+  background: #fff;
+  border: #fff;
+  text-align: center;
+}
+
+.enable-disable-awareness {
+  float: right;
+}

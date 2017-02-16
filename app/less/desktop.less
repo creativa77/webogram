@@ -205,7 +205,7 @@
     display: inline-block;
     vertical-align: top;
     margin-top: 3px;
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: -10px -111px;
 
   }
@@ -217,7 +217,7 @@
     margin-top: 2px;
     display: inline-block;
     vertical-align: top;
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: -11px -135px;
   }
 
@@ -228,7 +228,7 @@
     margin-top: 1px;
     display: inline-block;
     vertical-align: top;
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: -10px -163px;
   }
 
@@ -239,7 +239,7 @@
     margin-top: 1px;
     display: inline-block;
     vertical-align: top;
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: -10px -637px;
   }
 
@@ -250,7 +250,7 @@
     display: inline-block;
     vertical-align: top;
 
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: -10px -193px;
   }
 }
@@ -272,8 +272,10 @@
   }
 }
 
-.tg_head_msgs_edit_btn {
+.tg_head_peer_search_btn {
   float: right;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .tg_head_peer {
@@ -290,6 +292,10 @@
       max-width: 100%;
       border-radius: 0;
       padding: 9px 0;
+
+      float: none;
+      right: 0;
+      left: auto;
 
       margin: -1px 0 0 0;
       border: 1px solid rgba(15, 60, 96, 0.2);
@@ -369,6 +375,37 @@
   }
 }
 
+.icon-search {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  .image-2x('../img/icons/IconsetW.png', 42px, 1171px);
+  background-position: -12px -1037px;
+  vertical-align: middle;
+  opacity: 0.9;
+}
+
+
+.tg_head_peer_media_dropdown {
+  .dropdown-toggle  {
+    display: block;
+
+    .icon-bar {
+      display: block;
+      background-color: #d7e5f0;
+      width: 4px;
+      height: 4px;
+      border-radius: 2px;
+      margin-left: 3px;
+      margin-right: 3px;
+
+      & + .icon-bar {
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
 .icon-filter {
   &-photos,
   &-video,
@@ -378,7 +415,7 @@
     margin-right: 12px;
     vertical-align: top;
 
-    .image-2x('../img/icons/General.png', 40px, 848px);
+    .image-2x('../img/icons/General.png', 40px, 948px);
     background-position: 0 0;
   }
 
@@ -489,11 +526,23 @@
   .nano > .nano-pane {
     background : rgba(255,255,255,0.0);
     right: -2px;
+    top: 5px;
+    bottom: 5px;
 
     & > .nano-slider {
       background: #d1d1d1;
       background : rgba(0,0,0,0.17);
       margin: 0 3px 0 4px;
+    }
+  }
+}
+
+@media (max-width: 940px) {
+  .composer_emoji_tooltip {
+    margin-left: -245px;
+
+    &_tail {
+      left: 90%;
     }
   }
 }
@@ -610,10 +659,6 @@ a.footer_link.active:active {
   -webkit-transform: translateZ(0);
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
-
-  .im_dialogs_modal_col_wrap & {
-    padding: 0;
-  }
 }
 
 .im_dialogs_col {
@@ -668,6 +713,7 @@ a.footer_link.active:active {
   .contacts_modal_col .nano > & {
     width: 5px;
     right: 4px;
+    top: 10px;
   }
 
   .sessions_modal_col .nano > &,
@@ -681,6 +727,7 @@ a.footer_link.active:active {
   .im_dialogs_modal_col .nano > & {
     width: 6px;
     right: 2px;
+    top: 10px;
   }
 
   .im_history_col .nano > & {
@@ -738,7 +785,6 @@ a.footer_link.active:active {
     line-height: 18px;
     width: 100%;
     height: 39px;
-    padding: 13px 0 8px;
     overflow: hidden;
     -webkit-user-select: none;
   }
@@ -748,13 +794,17 @@ a.footer_link.active:active {
     color: #999;
     max-width: 556px;
     margin: 0 auto;
-    padding: 0 81px 0 85px;
+    padding: 13px 81px 8px 85px;
 
     a.im_history_typing_author {
       color: #999;
       font-weight: bold;
     }
   }
+}
+
+.im_history_loading_less {
+  margin-top: 5px;
 }
 
 /* Contacts modal */
@@ -765,12 +815,9 @@ a.footer_link.active:active {
     }
   }
 
-  &_search {
-    padding: 15px 12px 12px;
-    position: relative;
-  }
-
   &_members_list {
+    padding-top: 10px;
+
     a.contacts_modal_contact {
       padding: 8px 16px;
     }
@@ -871,6 +918,14 @@ a.footer_link.active:active {
   }
 }
 
+.im_submit_edit_label,
+.im_submit_edit .im_submit_send_label {
+  display: none;
+}
+.im_submit_edit .im_submit_edit_label {
+  display: inline;
+}
+
 .composer_emoji_panel {
   display: block;
   height: 30px;
@@ -891,11 +946,15 @@ a.footer_link.active:active {
 .im_message_selected .im_message_audio_duration,
 .im_message_selected .im_message_audio_size,
 .im_message_selected .im_message_fwd_date,
+.im_message_selected .im_message_views_cnt,
+.im_message_selected .im_message_sign_link,
 .im_history_select_active .im_message_outer_wrap:hover .im_message_date,
 .im_history_select_active .im_message_outer_wrap:hover .im_message_document_size,
 .im_history_select_active .im_message_outer_wrap:hover .im_message_audio_duration,
 .im_history_select_active .im_message_outer_wrap:hover .im_message_audio_size,
-.im_history_select_active .im_message_outer_wrap:hover .im_message_fwd_date {
+.im_history_select_active .im_message_outer_wrap:hover .im_message_fwd_date,
+.im_history_select_active .im_message_outer_wrap:hover .im_message_views_cnt,
+.im_history_select_active .im_message_outer_wrap:hover .im_message_sign_link {
   color: #899daf;
 }
 
@@ -984,32 +1043,11 @@ a.footer_link.active:active {
   }
 }
 
-.im_message_error_btn {
-  display: none;
-
-  .im_message_error & {
-    display: inline;
-  }
-
-  .icon-message-status {
-    background: #da564d;
-    opacity: 0.85;
-    pointer-events: auto;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-}
-
 /* Dialogs modal */
 .peer_select {
   &_window {
     .modal-dialog {
       max-width: 420px;
-    }
-    .im_dialogs_panel {
-      padding-top: 15px;
     }
   }
 
@@ -1042,6 +1080,10 @@ a.footer_link.active:active {
   }
 }
 
+a.peer_select_modal_share_link {
+  color: #999 !important;
+}
+
 @media (max-height: 600px), (max-width: 1010px) {
   .im_page_wrap {
     border-bottom: 0;
@@ -1052,49 +1094,6 @@ a.footer_link.active:active {
 
   .footer_wrap {
     display: none;
-  }
-}
-
-@media (max-width: 900px) {
-  /* Status ticks */
-  .icon-message-status,
-  .im_message_error_btn,
-  .icon-message-status-tick {
-    display: none;
-  }
-
-  .im_message {
-    &_out {
-      .icon-message-status-tick {
-        display: inline-block;
-        width: 16px;
-        height: 10px;
-        top: 2px;
-        position: relative;
-
-        .image-2x('../img/icons/Checks2.png', 16px, 10px);
-        background-size: 16px 10px;
-        background-position: 0 0;
-      }
-    }
-
-    &_pending {
-      .icon-message-status-tick {
-        display: none;
-      }
-    }
-
-    &_unread {
-      .icon-message-status-tick {
-        .image-2x('../img/icons/Checks1.png', 16px, 10px);
-        background-size: 16px 10px;
-        background-position: 0 0;
-      }
-    }
-
-    &_date {
-      padding: 0;
-    }
   }
 }
 
@@ -1162,6 +1161,13 @@ a.im_panel_peer_photo .peer_initials {
   margin-left: 36px;
 }
 
+.composer_emoji_insert_btn,
+.composer_progress_icon_wrap,
+.composer_command_btn,
+.composer_keyboard_btn {
+  z-index: 1;
+}
+
 .composer_emoji_insert_btn {
   &:hover {
     .icon-emoji {
@@ -1192,11 +1198,13 @@ a.im_panel_peer_photo .peer_initials {
   box-shadow: none;
   outline: none;
   box-shadow: 0 1px 0 0 #e8e8e8;
-  padding: 1px 30px 1px 0;
+  padding: 1px 28px 1px 0;
+  position: relative;
   margin: 0;
   min-height: 50px;
   line-height: 20px;
   height: auto;
+  box-sizing: border-box;
 
   &:focus {
     border: 0;
@@ -1218,7 +1226,7 @@ a.im_panel_peer_photo .peer_initials {
   opacity: 0.8;
   margin: 0;
 
-  .image-2x('../img/icons/General.png', 40px, 848px);
+  .image-2x('../img/icons/General.png', 40px, 948px);
   background-position: -11px -455px;
 }
 
@@ -1267,7 +1275,7 @@ a.im_panel_peer_photo .peer_initials {
   vertical-align: top;
   opacity: 0.8;
 
-  .image-2x('../img/icons/General.png', 40px, 848px);
+  .image-2x('../img/icons/General.png', 40px, 948px);
   background-position: -10px -399px;
 }
 
@@ -1299,6 +1307,12 @@ a.im_panel_peer_photo .peer_initials {
     &_textarea {
       min-height: 25px;
       padding-right: 25px;
+    }
+
+    &_progress_icon_wrap {
+      top: 0;
+      right: 0;
+      margin-top: 0;
     }
 
     &_emoji_insert_btn {
@@ -1397,6 +1411,16 @@ a.im_panel_peer_photo .peer_initials {
   .im_send_dropbox_wrap {
     padding-top: 5px;
     padding-bottom: 5px;
+  }
+}
+
+.im_edit_panel {
+  &_wrap.im_edit_small_panel_wrap {
+    padding-bottom: 8px;
+  }
+
+  .im_edit_small_panel_wrap &_border {
+    margin-bottom: 7px;
   }
 }
 
@@ -1773,6 +1797,37 @@ a.im_panel_peer_photo .peer_initials {
   margin: 8px 10px 8px 16px;
 }
 
+.im_message_views_wrap {
+  width: 0;
+
+  .im_grouped &,
+  .im_grouped_short &,
+  .im_grouped_fwd &,
+  .im_grouped_fwd_short & {
+    display: none;
+    .im_message_selected& {
+      display: block;
+    }
+  }
+  .im_message_selected.im_grouped &,
+  .im_message_selected.im_grouped_fwd & {
+    width: auto;
+  }
+}
+.im_message_views {
+  right: 0;
+  font-size: 0.85em;
+  top: 3px;
+
+  .im_grouped &,
+  .im_grouped_fwd & {
+    top: 19px;
+  }
+  .im_message_fwd & {
+    top: 3px;
+  }
+}
+
 .im_grouped_short {
   .im_content_message_wrap {
     margin: 6px 10px 6px 16px;
@@ -1807,13 +1862,13 @@ a.im_panel_peer_photo .peer_initials {
   margin-top: 4px;
   margin-bottom: 4px;
 }
+.im_grouped_short .im_message_author_wrap,
 .im_grouped_short .im_message_from_photo,
-.im_grouped_short .im_message_author,
+.im_grouped .im_message_author_wrap,
 .im_grouped .im_message_from_photo,
-.im_grouped .im_message_author,
-.im_grouped_fwd .im_message_author,
+.im_grouped_fwd .im_message_author_wrap,
 .im_grouped_fwd .im_message_from_photo,
-.im_grouped_fwd_short .im_message_author,
+.im_grouped_fwd_short .im_message_author_wrap,
 .im_grouped_fwd_short .im_message_from_photo {
   display: none;
 }
@@ -1839,7 +1894,7 @@ a.im_panel_peer_photo .peer_initials {
   .im_grouped &,
   .im_grouped_fwd &,
   .im_grouped_fwd_short & {
-    .im_message_date {
+    .im_message_meta {
       display: none;
     }
   }
