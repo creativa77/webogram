@@ -73,10 +73,14 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         }
       });
 
-      // Detect empty messages and add a dummy text to get Telegram to send anyway
+      // Detect empty messages and insert emoticon
       $scope.$on('ui_message_before_send', function(scope) {
-        if($scope.draftMessage.text == "") {
-          $scope.draftMessage.text = '-';
+        if($scope.draftMessage.text == "" &&
+          configService.isAwarenessEnabled(currentRoomId)) {
+          $('canvas')[0].toBlob(function(blob) {
+            $scope.draftMessage.isMedia = true;
+            $scope.draftMessage.files = [blob];
+          });
         };
       });
 
