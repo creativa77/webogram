@@ -74,7 +74,7 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
       });
 
       // Detect empty messages and insert emoticon
-      $scope.$on('ui_message_before_send', function(scope) {
+      $scope.$on('immedia_ui_message_before_send', function(scope) {
         if($scope.draftMessage.text == "" &&
           configService.isAwarenessEnabled(currentRoomId)) {
           $('canvas')[0].toBlob(function(blob) {
