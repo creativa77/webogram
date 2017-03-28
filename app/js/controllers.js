@@ -2342,6 +2342,7 @@ angular.module('myApp.controllers', ['myApp.i18n'])
 
     function submitMessage (e) {
       $scope.$broadcast('ui_message_before_send')
+      $scope.$broadcast('immedia_ui_message_before_send')
 
       $timeout(function () {
         if (editMessageID) {
