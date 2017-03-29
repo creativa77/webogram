@@ -52,16 +52,14 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
       });
 
 
-      /*
-      $scope.$on('ui_message_before_send', function() {
-        console.log('xxx message sent!');
-      });
-      */
+      // Trap outgoing messages to insert immedia picture to go alongside the message.
+      // Sends a picture to the immedia service.
       $scope.$on('apiUpdate', function (e, update) {
         switch (update._) {
           // NOTE: This is called both for new outgoing and new incoming messages
+          // so we need to differentiate them using message flags.
           case 'updateNewMessage':
-            if (update.message.out && currentRoomId &&
+            if (update.message.pFlags.out && currentRoomId &&
                 configService.isAwarenessEnabled(currentRoomId)) {
               roomService.sendSnapshot({
                 peerId: update.message.from_id,
@@ -73,7 +71,7 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
         }
       });
 
-      // Detect empty messages and insert emoticon
+      // Detect empty messages and insert emoticon.
       $scope.$on('immedia_ui_message_before_send', function(scope) {
         if($scope.draftMessage.text == "" &&
           configService.isAwarenessEnabled(currentRoomId)) {
@@ -83,14 +81,6 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
           });
         };
       });
-
-      // This gives the temporary ID only
-      // broadcasted from services.js L1796 before the message is sent
-      /*
-      $scope.$on('history_append', function(e, data) {
-        console.log('xxx history_append: ' + data.messageID);
-      });
-      */
     }
   }])
 
