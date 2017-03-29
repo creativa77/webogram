@@ -30,7 +30,9 @@ gulp.task('usemin-index', function () {
   return gulp.src('app/index.html')
     .pipe($.usemin({
       html: [$.minifyHtml({empty: true})],
-      js: ['concat', $.ngAnnotate(), $.uglify({outSourceMap: false})],
+      // TODO(adamantivm) uglify temporarily disabled because it causes trouble for ngStorage on Chrome
+      // js: ['concat', $.ngAnnotate(), $.uglify({outSourceMap: false, output:{ max_line_len: 100}})],
+      js: ['concat', $.ngAnnotate()],
       css: ['concat', $.minifyCss({compatibility: true, keepBreaks: true})]
     }))
     .pipe(gulp.dest('dist'))
