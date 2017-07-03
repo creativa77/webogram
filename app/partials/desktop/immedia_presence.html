@@ -10,7 +10,16 @@
   </div>
 
   <!-- hide'em all -->
-  <div ng-hide="videoUnavailable" >
+  <div class="immedia-awareness"
+    ng-hide="videoUnavailable"
+    ng-mouseover="onMouseOverAwareness()"
+    ng-mouseleave="onMouseLeaveAwareness()"
+  >
+    <!-- enable/diable buttons -->
+    <div class="enable-disable-awareness">
+      <button class="btn btn-primary aw-btn" ng-click="enableAwareness()" data-ng-hide="showAwarenessPanel()">Enable awareness</button>
+      <button class="btn btn-primary aw-btn aw-disable-btn" ng-style="disableButtonStyle" ng-click="disableAwareness()" data-ng-show="showAwarenessPanel()">Disable awareness</button>
+    </div>
 
     <!-- Top "selfies" row -->
     <div class="row">
@@ -26,12 +35,6 @@
         <div ng-repeat="participant in participants" class="participant" data-ng-show="showParticipantsPanel()">
           <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
           <p class="photo-caption">{{participant.nickname}}</p>
-        </div>
-
-        <!-- enable/diable buttons -->
-        <div class="enable-disable-awareness">
-          <button class="btn btn-primary" ng-click="enableAwareness()" data-ng-hide="showAwarenessPanel()">Enable awareness</button>
-          <button class="btn btn-primary" ng-click="disableAwareness()" data-ng-show="showAwarenessPanel()">Disable awareness</button>
         </div>
       </div>
 
