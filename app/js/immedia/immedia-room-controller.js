@@ -17,6 +17,10 @@
     $scope.videoUnavailable       = undefined;  // When the user doesn't accept ( or there is a problem with acquiring video )
     $scope.enteringInProgress     = false;      // Is an authentication process going on?
     $scope.ping                   = "N/A";      // Last ping time
+
+    // Awareness button style
+    $scope.disableButtonStyle = {opacity: 0};
+
     // Internal / status / private variables
     var canvas = $('#self')[0];                 // canvas on which snapshots are being drawn
     roomSvc.setCanvas(canvas);
@@ -170,6 +174,15 @@
       updateRoom();
       focusChatInputEl();
     };
+
+    // --- Awareness --- //
+    $scope.onMouseOverAwareness = function() {
+      $scope.disableButtonStyle = {opacity: 1};
+    }
+
+    $scope.onMouseLeaveAwareness = function() {
+      $scope.disableButtonStyle = {opacity: 0};
+    }
   }]);
 
 }());
