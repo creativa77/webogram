@@ -2007,14 +2007,16 @@ body .nano-pane{display:none}
 body .nano>.nano-content{position:static}
 body .tg_head_peer_info{text-align:center}
 body .im_history_col_wrap,body .tg_head_main_wrap{width:auto;max-width:700px;float:none;margin:0 auto}}
-.immedia-presence{height:150px;overflow-y:auto}
+.immedia-presence{position:relative}
 .im_grouped_short .im_message_from_photo.immedia{display:block}
 .im_message_from_photo.immedia{border-radius:4px;width:70px;height:50px;margin-left:-25px}
 .photo-caption{font-size:9px;text-align:center;margin-bottom:0}
+.participants{height:150px;overflow-y:auto}
 .participants .participant{float:left;margin:3px}
 .participants .participant .nickname{display:block;padding:4px 3px 3px;width:70px;height:25px;border:1px solid #ccc;background:#f9f9f9;font-size:12px;border-radius:4px;margin-top:2px}
 .participants .participant #myNickname{font-weight:700;font-size:12px}
 .participants .participant .nickname:hover{border:1px solid #ccc;background:#fdfdfd}
 .participants .participant .nickname:focus{border:1px solid #111;color:#666;background:#fff}
 .participants .participant .nickname:disabled{background:#fff;border:#fff;text-align:center}
-.enable-disable-awareness{float:right}
+.enable-disable-awareness{position:absolute;right:0;top:0;pointer-events:none}
+.aw-btn{pointer-events:all}
