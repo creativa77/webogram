@@ -1,7 +1,7 @@
 .immedia-presence {
-  height: 150px; // this allows for two rows of pics
-  overflow-y: auto;
+  position: relative;
 }
+
 /* Override Webogram styles: always show images next to messages */
 .im_grouped_short .im_message_from_photo.immedia {
   display: block;
@@ -20,6 +20,10 @@
   margin-bottom: 0;
 }
 
+.participants {
+  height: 150px; // allows for two rows of pictures
+  overflow-y: auto;
+}
 .participants .participant {
   float: left;
   margin: 3px;
@@ -62,5 +66,12 @@
 }
 
 .enable-disable-awareness {
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.aw-btn {
+  pointer-events: all;
 }
