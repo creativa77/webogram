@@ -1,5 +1,5 @@
 /*!
- * Webogram v0.5.5 - messaging web application for MTProto
+ * Webogram v0.6.0 - messaging web application for MTProto
  * https://github.com/zhukov/webogram
  * Copyright (C) 2014 Igor Zhukov <igor.beatle@gmail.com>
  * https://github.com/zhukov/webogram/blob/master/LICENSE
@@ -802,8 +802,8 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
       var isClean = this.cleanupSent()
       // console.log('Check lp', this.longPollPending, tsNow(), this.dcID, isClean)
       if (this.longPollPending && tsNow() < this.longPollPending ||
-        this.offline ||
-        akStopped) {
+          this.offline ||
+          akStopped) {
         return false
       }
       var self = this
@@ -1121,7 +1121,6 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
 
       this.pendingAcks = []
 
-      var self = this
       this.sendEncryptedRequest(message).then(function (result) {
         self.toggleOffline(false)
         // console.log('parse for', message)
@@ -1546,7 +1545,9 @@ angular.module('izhukov.mtproto', ['izhukov.utils'])
             break
           }
         case 'msg_new_detailed_info':
-          // this.ackMessage(message.answer_msg_id)
+          if (this.pendingAcks.indexOf(message.answer_msg_id)) {
+            break
+          }
           this.reqResendMessage(message.answer_msg_id)
           break
 

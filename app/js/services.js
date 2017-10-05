@@ -1,5 +1,5 @@
 /*!
- * Webogram v0.5.5 - messaging web application for MTProto
+ * Webogram v0.6.0 - messaging web application for MTProto
  * https://github.com/zhukov/webogram
  * Copyright (C) 2014 Igor Zhukov <igor.beatle@gmail.com>
  * https://github.com/zhukov/webogram/blob/master/LICENSE
@@ -648,8 +648,8 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       switch (action) {
         case 'send':
           if (chat._ == 'channel' &&
-            !chat.pFlags.megagroup &&
-            !chat.pFlags.editor) {
+              !chat.pFlags.megagroup &&
+              !chat.pFlags.editor) {
             return false
           }
           break
@@ -660,7 +660,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
           if (chat._ == 'channel') {
             if (chat.pFlags.megagroup) {
               if (!chat.pFlags.editor &&
-                !(action == 'invite' && chat.pFlags.democracy)) {
+                  !(action == 'invite' && chat.pFlags.democracy)) {
                 return false
               }
             } else {
@@ -668,7 +668,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
             }
           } else {
             if (chat.pFlags.admins_enabled &&
-              !chat.pFlags.admin) {
+                !chat.pFlags.admin) {
               return false
             }
           }
@@ -1893,7 +1893,11 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
             apiDoc.duration = attribute.duration
             apiDoc.w = attribute.w
             apiDoc.h = attribute.h
-            if (apiDoc.thumb) {
+            if (apiDoc.thumb &&
+                attribute.pFlags.round_message) {
+              apiDoc.type = 'round'
+            }
+            else if (apiDoc.thumb) {
               apiDoc.type = 'video'
             }
             break
@@ -1935,6 +1939,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
             apiDoc.mime_type = 'video/mp4'
             break
           case 'video':
+          case 'round':
             apiDoc.mime_type = 'video/mp4'
             break
           case 'sticker':
@@ -2008,6 +2013,12 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
           inlineImage = true
           boxWidth = Math.min(windowW - 80, Config.Mobile ? 210 : 260)
           boxHeight = Math.min(windowH - 100, Config.Mobile ? 210 : 260)
+          break
+
+        case 'round':
+          inlineImage = true
+          boxWidth = Math.min(windowW - 80, 200)
+          boxHeight = Math.min(windowH - 100, 200)
           break
 
         default:
@@ -2209,6 +2220,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
     var started = false
     var applied = false
     var currentStickerSets = []
+    var emojiIndex = {}
 
     $rootScope.$on('apiUpdate', function (e, update) {
       if (update._ != 'updateStickerSets' &&
@@ -2220,7 +2232,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
 
       return Storage.get('all_stickers').then(function (stickers) {
         if (!stickers ||
-          stickers.layer != Config.Schema.API.layer) {
+            stickers.layer != Config.Schema.API.layer) {
           $rootScope.$broadcast('stickers_changed')
         }
         switch (update._) {
@@ -2243,6 +2255,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
             set.pFlags.installed = true
             stickers.sets.unshift(set)
             stickers.fullSets[set.id] = fullSet
+            indexStickerSetEmoticons(fullSet)
             break
 
           case 'updateDelStickerSet':
@@ -2283,6 +2296,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       openStickerset: openStickerset,
       installStickerset: installStickerset,
       pushPopularSticker: pushPopularSticker,
+      searchStickers: searchStickers,
       getStickerset: getStickerset
     }
 
@@ -2296,10 +2310,12 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
     function getStickers (force) {
       return Storage.get('all_stickers').then(function (stickers) {
         var layer = Config.Schema.API.layer
-        if (stickers.layer != layer) {
+        if (stickers.layer != layer ||
+            stickers.emojiIndex === undefined) {
           stickers = false
         }
         if (stickers && stickers.date > tsNow(true) && !force) {
+          emojiIndex = stickers.emojiIndex
           return processRawStickers(stickers)
         }
         return MtpApiManager.invokeApi('messages.getAllStickers', {
@@ -2315,6 +2331,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
 
           if (notModified) {
             Storage.set({all_stickers: newStickers})
+            emojiIndex = newStickers.emojiIndex
             return processRawStickers(newStickers)
           }
 
@@ -2376,14 +2393,74 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       })
     }
 
+    function indexStickerSetEmoticons(fullSet) {
+      angular.forEach(fullSet.packs, function (pack) {
+        var emoji = pack.emoticon
+        var emojiCode = false
+        while (emoji.length) {
+          emojiCode = EmojiHelper.emojiMap[emoji]
+          if (emojiCode !== undefined) {
+            break
+          }
+          emoji = emoji.substr(0, -1)
+        }
+        // console.warn('index', fullSet, pack, emojiCode)
+        if (emojiCode === undefined) {
+          return
+        }
+        var stickersList = emojiIndex[emojiCode]
+        if (stickersList === undefined) {
+          emojiIndex[emojiCode] = stickersList = []
+        }
+        angular.forEach(pack.documents, function (docID) {
+          if (stickersList.indexOf(docID) === -1) {
+            stickersList.push(docID)
+          }
+        })
+      })
+    }
+
+    function searchStickers(emojiCode) {
+      return getPopularStickers().then(function () {
+        // console.warn('search', emojiCode, emojiIndex, emojiIndex[emojiCode])
+        var stickersList = emojiIndex[emojiCode]
+        var result = []
+        if (stickersList === undefined) {
+          return result
+        }
+        var setIDs = []
+        angular.forEach(currentStickerSets, function (set) {
+          setIDs.push(set.id)
+        })
+        angular.forEach(stickersList, function (docID) {
+          var doc = AppDocsManager.getDoc(docID)
+          if (!doc || !doc.stickerSetInput) {
+            return
+          }
+          var setID = doc.stickerSetInput.id
+          if (setIDs.indexOf(setID) == -1) {
+            return
+          }
+          result.push(doc)
+        })
+        result.sort(function (doc1, doc2) {
+          return setIDs.indexOf(doc1.stickerSetInput.id) - setIDs.indexOf(doc2.stickerSetInput.id)
+        })
+        return result
+      })
+
+    }
+
     function getStickerSets (allStickers, prevCachedSets) {
       var promises = []
       var cachedSets = prevCachedSets || allStickers.fullSets || {}
       allStickers.fullSets = {}
+      emojiIndex = allStickers.emojiIndex = {}
       angular.forEach(allStickers.sets, function (shortSet) {
         var fullSet = cachedSets[shortSet.id]
         if (fullSet && fullSet.set.hash == shortSet.hash) {
           allStickers.fullSets[shortSet.id] = fullSet
+          indexStickerSetEmoticons(fullSet)
         } else {
           var promise = MtpApiManager.invokeApi('messages.getStickerSet', {
             stickerset: {
@@ -2393,6 +2470,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
             }
           }).then(function (fullSet) {
             allStickers.fullSets[shortSet.id] = fullSet
+            indexStickerSetEmoticons(fullSet)
           })
           promises.push(promise)
         }
@@ -2653,8 +2731,8 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
 
     function regroupWrappedResults (results, rowW, rowH) {
       if (!results ||
-        !results[0] ||
-        results[0].type != 'photo' && results[0].type != 'gif' && results[0].type != 'sticker') {
+          !results[0] ||
+          ['photo', 'gif', 'sticker'].indexOf(results[0].type) == -1) {
         return
       }
       var ratios = []
@@ -3017,6 +3095,7 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       curState.pendingPtsUpdates.sort(function (a, b) {
         return a.pts - b.pts
       })
+      // console.log(dT(), 'pop update', channelID, curState.pendingPtsUpdates)
 
       var curPts = curState.pts
       var goodPts = false
@@ -3309,23 +3388,28 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       }
 
       if (update._ == 'updateChannelTooLong') {
-        getChannelDifference(channelID)
+        if (!curState.lastPtsUpdateTime ||
+            curState.lastPtsUpdateTime < tsNow() - 10000) {
+          // console.trace(dT(), 'channel too long, get diff', channelID, update)
+          getChannelDifference(channelID)
+        }
         return false
       }
 
       if (update._ == 'updateNewMessage' ||
-        update._ == 'updateEditMessage' ||
-        update._ == 'updateNewChannelMessage' ||
-        update._ == 'updateEditChannelMessage') {
+          update._ == 'updateEditMessage' ||
+          update._ == 'updateNewChannelMessage' ||
+          update._ == 'updateEditChannelMessage') {
         var message = update.message
         var toPeerID = AppPeersManager.getPeerID(message.to_id)
         var fwdHeader = message.fwd_from || {}
-        if (message.from_id && !AppUsersManager.hasUser(message.from_id, message.pFlags.post) ||
-          fwdHeader.from_id && !AppUsersManager.hasUser(fwdHeader.from_id, !!fwdHeader.channel_id) ||
-          fwdHeader.channel_id && !AppChatsManager.hasChat(fwdHeader.channel_id, true) ||
-          toPeerID > 0 && !AppUsersManager.hasUser(toPeerID) ||
-          toPeerID < 0 && !AppChatsManager.hasChat(-toPeerID)) {
-          console.warn(dT(), 'Not enough data for message update', message)
+        var reason = false
+        if (message.from_id && !AppUsersManager.hasUser(message.from_id, message.pFlags.post/* || channelID*/) && (reason = 'author') ||
+            fwdHeader.from_id && !AppUsersManager.hasUser(fwdHeader.from_id, !!fwdHeader.channel_id) && (reason = 'fwdAuthor') ||
+            fwdHeader.channel_id && !AppChatsManager.hasChat(fwdHeader.channel_id, true) && (reason = 'fwdChannel') ||
+            toPeerID > 0 && !AppUsersManager.hasUser(toPeerID) && (reason = 'toPeer User') ||
+            toPeerID < 0 && !AppChatsManager.hasChat(-toPeerID) && (reason = 'toPeer Chat')) {
+          console.warn(dT(), 'Not enough data for message update', toPeerID, reason, message)
           if (channelID && AppChatsManager.hasChat(channelID)) {
             getChannelDifference(channelID)
           } else {
@@ -3364,6 +3448,8 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
         if (update.pts > curState.pts) {
           curState.pts = update.pts
           popPts = true
+
+          curState.lastPtsUpdateTime = tsNow()
         }
         else if (update.pts_count) {
           // console.warn(dT(), 'Duplicate update', update)
@@ -3869,7 +3955,8 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
           notification = new Notification(data.title, {
             icon: data.image || '',
             body: data.message || '',
-            tag: data.tag || ''
+            tag: data.tag || '',
+            silent: data.silent || false
           })
         } catch (e) {
           notificationsUiSupport = false
@@ -4151,10 +4238,12 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
       })
     }
 
-    function confirm (params, options) {
+    function confirm (params, options, data) {
       options = options || {}
+      data = data || {}
       var scope = $rootScope.$new()
       angular.extend(scope, params)
+      angular.extend(scope, { data: data })
 
       var modal = $modal.open({
         templateUrl: templateUrl('confirm_modal'),
@@ -4260,15 +4349,40 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
     }
   })
 
-  .service('ChangelogNotifyService', function (Storage, $rootScope, $modal) {
+  .service('ChangelogNotifyService', function (Storage, $rootScope, $modal, $timeout, MtpApiManager, ApiUpdatesManager) {
+
+    var checked = false
+
     function checkUpdate () {
-      Storage.get('last_version').then(function (lastVersion) {
-        if (lastVersion != Config.App.version) {
-          if (lastVersion) {
-            showChangelog(lastVersion)
-          }
-          Storage.set({last_version: Config.App.version})
+      if (checked) {
+        return
+      }
+      checked = true
+      MtpApiManager.getUserID().then(function (userID) {
+        if (!userID) {
+          return
         }
+        $timeout(function () {
+          Storage.get('last_version').then(function (lastVersion) {
+            if (lastVersion != Config.App.version) {
+              if (!lastVersion) {
+                Storage.set({last_version: Config.App.version})
+              } else {
+                MtpApiManager.invokeApi('help.getAppChangelog', {
+                  prev_app_version: lastVersion
+                }, {
+                  noErrorBox: true,
+                }).then(function (updates) {
+                  if (updates._ == 'updates' && !updates.updates.length) {
+                    return false
+                  }
+                  ApiUpdatesManager.processUpdateMessage(updates)
+                  Storage.set({last_version: Config.App.version})
+                })
+              }
+            }
+          })
+        }, 5000)
       })
     }
 
@@ -4523,7 +4637,10 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
               url.search('https://t.me/') === 0) {
             target = '_self'
           }
-          window.open(url, target)
+          var popup = window.open(url, target)
+          try {
+            popup.opener = null;
+          } catch (e) {}
         })
         return true
       }
@@ -4637,6 +4754,19 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
         }
       })
 
+      $(document).on('mousedown', function (event) {
+        var target = event.target
+        if (target &&
+            target.tagName == 'A') {
+          var href = $(target).attr('href') || target.href || ''
+          if (Config.Modes.chrome_packed && 
+              href.length &&
+              $(target).attr('target') == '_blank') {
+            $(target).attr('rel', '')
+          }
+        }
+      })
+
       $rootScope.$on('$routeUpdate', checkLocationTgAddr)
       checkLocationTgAddr()
     }
@@ -4648,8 +4778,11 @@ angular.module('myApp.services', ['myApp.i18n', 'izhukov.utils'])
           return true
         }
       }
-      var wnd = window.open(url, '_blank')
-      return wnd ? true : false
+      var popup = window.open(url, '_blank')
+      try {
+        popup.opener = null;
+      } catch (e) {}
+      return popup ? true : false
     }
 
     function shareUrl (url, text, shareLink) {
