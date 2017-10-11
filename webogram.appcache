@@ -1,6 +1,4 @@
 CACHE MANIFEST
-# Time: Tue Jul 04 2017 11:51:28 GMT-0300 (ART)
-
 
 CACHE:
 favicon.ico
@@ -79,6 +77,7 @@ vendor/closure/long.js
 vendor/cryptoJS/crypto.js
 vendor/jsbn/jsbn_combined.js
 vendor/leemon_bigint/bigint.js
+vendor/recorderjs/encoder_worker.js
 vendor/rusha/rusha.js
 vendor/angular/i18n/angular-locale_de-de.js
 vendor/angular/i18n/angular-locale_en-us.js
@@ -88,8 +87,9 @@ vendor/angular/i18n/angular-locale_nl-nl.js
 vendor/angular/i18n/angular-locale_pt-br.js
 vendor/angular/i18n/angular-locale_ru-ru.js
 
-
 NETWORK:
 http://*
 https://*
 *
+
+# hash: 851930086351df51da42f00b715f56ac3a2744186a49b614d9de88ed9fa82e6c
