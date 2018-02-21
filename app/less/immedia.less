@@ -16,60 +16,53 @@
 
 .photo-caption {
   font-size: 9px;
+  line-height: 9px;
   text-align: center;
-  margin-bottom: 0;
+  margin: 0;
+  position: relative;
+  bottom: 10px;
+  color: rgba(255,255,255, 0.5);
+}
+
+.photo-caption:hover {
+  font-size: 10px;
+  font-weight: bold;
+  color: rgba(255,255,255, 1);
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 .participants {
   height: 150px; // allows for two rows of pictures
   overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 .participants .participant {
   float: left;
-  margin: 3px;
+  margin: 1px;
+  position: relative;
+  height: 45px;
 }
-
-.participants .participant .nickname {
-  border: none;
-  display: block;
-  padding: 3px;
-  padding-top: 4px;
-  width: 70px;
-  height: 25px;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  font-size: 12px;
-  border-radius: 4px;
-  margin-top: 2px;
-}
-
-.participants .participant #myNickname {
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.participants .participant .nickname:hover {
-  border: 1px solid #ccc;
-  background: #fdfdfd;
-}
-
-.participants .participant .nickname:focus {
-  border: 1px solid #111;
-  color: #666;
-  background: #fff;
-}
-
-.participants .participant .nickname:disabled {
-  background: #fff;
-  border: #fff;
-  text-align: center;
+.participants .participant .im-snapshot {
+  height: 45px;
 }
 
 .enable-disable-awareness {
   position: absolute;
   right: 0;
   top: 0;
+  width: 10px;
   pointer-events: none;
+  z-index: 1;
+  opacity: 0.2;
+  transition: width .5s;
+}
+
+.enable-disable-awareness:hover {
+  opacity: 1;
+  width: 144px;
 }
 
 .aw-btn {
