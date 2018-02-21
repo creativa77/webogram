@@ -28,12 +28,12 @@
         <!-- Me -->
         <div class="participant" data-ng-show="showParticipantsPanel()">
           <video autoplay style="display: none" width="640" height="480" ></video>
-          <canvas id="self" width="70" height="50" class="img-rounded img-snapshot" ng-hide="videolessMode"></canvas>
+          <canvas id="self" width="63" height="45" class="img-rounded img-snapshot" ng-hide="videolessMode"></canvas>
         </div>
 
         <!-- Each participant -->
         <div ng-repeat="participant in participants" class="participant" data-ng-show="showParticipantsPanel()">
-          <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
+          <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot im-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
           <p class="photo-caption">{{participant.nickname}}</p>
         </div>
       </div>
