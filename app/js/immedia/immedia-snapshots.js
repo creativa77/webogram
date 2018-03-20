@@ -257,7 +257,8 @@ ImmediaTracker.prototype._stopVideo = function() {
   this.stopFaceTracking();
 
   //Stop the stream
-  this.stream.stop();
+  var track = this.stream.getTracks()[0];  // if only one media track
+  track.stop();
 };
 
 ImmediaTracker.prototype.snoozeVideo = function() {
