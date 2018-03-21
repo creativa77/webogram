@@ -7,35 +7,36 @@ GH_PAGES_BRANCH=gh-pages
 TMP_DIR=/tmp/immedia.d
 BRANCH=`git branch | grep "*" | awk {'print $2'}`
 
-#if [ ${GH_PAGES_BRANCH} = ${BRANCH} ] ; then
-#  echo "Choose another branch to deploy, not ${BRANCH}!"
-#  exit
-#fi
+if [ ${GH_PAGES_BRANCH} = ${BRANCH} ] ; then
+ echo "Choose another branch to deploy, not ${BRANCH}!"
+ exit
+fi
 
-#echo "I'm going to deploy the branch ${BRANCH} to github pages (and will remove whatever is there). OK? (Ctrl-C for 'No')"
-#read a
+echo "I'm going to deploy the branch ${BRANCH} to github pages (and will remove whatever is there). OK? (Ctrl-C for 'No')"
+read a
 
-#gulp build
+gulp build
 
-#echo "Done with build... continue?"
-#read a
+echo "Done with build... continue?"
+read a
 
-#rm -rf ${TMP_DIR} 2>/dev/null
-#mkdir ${TMP_DIR}
+rm -rf ${TMP_DIR} 2>/dev/null
+mkdir ${TMP_DIR}
 
-#cp -rp dist/* ${TMP_DIR}
+cp -rp dist/* ${TMP_DIR}
 
-#git checkout ${GH_PAGES_BRANCH}
+git checkout ${GH_PAGES_BRANCH}
 
-#git rm -fr .
+cp CNAME ${TMP_DIR}
 
-#cp -r ${TMP_DIR}/* .
+git rm -fr .
 
-#git add .
+cp -r ${TMP_DIR}/* .
 
-#git commit -m "Updated version from ${BRANCH}"
+git add .
+
+git commit -m "Updated version from ${BRANCH}"
 
 #git push adamantivm gh-pages
 
 #git checkout ${BRANCH}
-
