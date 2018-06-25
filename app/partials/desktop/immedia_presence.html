@@ -32,7 +32,7 @@
         </div>
 
         <!-- Each participant -->
-        <div ng-repeat="participant in participants" class="participant" data-ng-show="showParticipantsPanel()">
+        <div ng-repeat="participant in participants | orderBy : 'nickname'" class="participant" data-ng-show="showParticipantsPanel()">
           <img ng-src="{{ participant.image }}" class="img-rounded img-snapshot im-snapshot ng-class:{stale:participant.stale};" ng-hide="videolessMode">
           <p class="photo-caption">{{participant.nickname}}</p>
         </div>
