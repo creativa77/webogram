@@ -4,7 +4,7 @@
    Prepending 'only screen and ' to each media query breaks nested media queries */
 /* app desktop css */
 .tg_head_split {
-  max-width: 1010px;
+  max-width: 1600px;
   margin: 0 auto;
   height: 48px;
   background: #5682a3;
@@ -510,7 +510,7 @@
 }
 .im_page_wrap {
   background: #fff;
-  max-width: 1010px;
+  max-width: 1600px;
   min-width: 300px;
   margin: 0 auto;
   -webkit-box-shadow: 0px 1px 0 #dfe5ec;
@@ -965,11 +965,11 @@ a.peer_select_modal_share_link {
   margin-left: 52px;
 }
 .im_send_panel_wrap {
-  max-width: 554px;
+  max-width: 1000px;
   padding-bottom: 21px;
 }
 .im_send_form {
-  max-width: 382px;
+  max-width: 900px;
   left: 70px;
   right: 72px;
 }
@@ -1600,7 +1600,7 @@ a.im_panel_peer_photo .peer_initials {
   background: #f2f6fa;
 }
 .im_message_wrap {
-  max-width: 560px;
+  max-width: 1000px;
   padding: 0 15px 0 15px;
   margin: 0 auto;
   position: static;
