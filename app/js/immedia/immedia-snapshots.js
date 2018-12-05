@@ -204,7 +204,7 @@ ImmediaTracker.prototype.startUserMedia = function(err, callback) {
 ImmediaTracker.prototype.setStream = function(stream) {
   this.stream = stream;
 
-  this.video.src = window.URL.createObjectURL(stream);
+  this.video.srcObject = stream;
 
   console.log("Video started...");
 
