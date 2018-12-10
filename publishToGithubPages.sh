@@ -31,6 +31,8 @@ cp CNAME ${TMP_DIR}
 
 git rm -fr .
 
+rm -fr ./node_modules
+
 cp -r ${TMP_DIR}/* .
 
 git add .
