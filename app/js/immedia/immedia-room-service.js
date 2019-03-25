@@ -20,12 +20,38 @@
     var TRACE = false;
     var TRACE_GC = false;
 
+    // Setting a small cache limit for now
+    // 30 people * 10 messages per day = 300 snapshots in cache
+    // Total size (aprox): 3000 * 10kB = 3000kB ~= 3MB
+    // We can make it bigger in the future if needed
+    var MAX_SNAPSHOTS = 300;
+
     // JAC TODO: Move this fully from the controller to here
     var canvas;
 
     var storage = $localStorage.$default({
       snapshotsByMessageId: {}
     });
+
+    function addSnapshotToStorage(msg) {
+      var msgId2 = msg.peerId + ":" + msg.timestamp;
+      var snapshotsInCacheKeys = Object.keys(storage.snapshotsByMessageId).sort((a, b) => {
+        var timestampA = a.split(':')[1];
+        var timestampB = b.split(':')[1];
+        return timestampA - timestampB;
+      });
+
+      var amountOfPicsInCache = snapshotsInCacheKeys.length;
+
+      if (amountOfPicsInCache >= MAX_SNAPSHOTS) {
+        var amountToRemove = amountOfPicsInCache - MAX_SNAPSHOTS + 1;
+        snapshotsInCacheKeys.length = amountToRemove;
+        snapshotsInCacheKeys.forEach((key) => {
+          delete storage.snapshotsByMessageId[key];
+        })
+      }
+      storage.snapshotsByMessageId[msgId2] = msg;
+    };
 
     $interval(function(){
       var staleThreshold  = new Date().getTime() - 10 * 1000; //10 Seconds
@@ -209,8 +235,7 @@
     };
 
     $rootScope.$on('message', function(scope, msg) {
-      var msgId2 = msg.peerId + ":" + msg.timestamp;
-      storage.snapshotsByMessageId[msgId2] = msg;
+      addSnapshotToStorage(msg);
     });
 
     this.sendSnapshot = function(data) {
@@ -224,8 +249,7 @@
       this.sendMessage(msg);
 
       // Add to the hash list
-      var msgId2 = msg.peerId + ":" + msg.timestamp;
-      storage.snapshotsByMessageId[msgId2] = msg;
+      addSnapshotToStorage(msg);
     };
 
     this.getImageUrl = function(messageId) {
