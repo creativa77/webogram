@@ -43,7 +43,7 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
 
     function link($scope, element, attrs) {
 
-      // Keeps track of the currently selected roomm
+      // Keeps track of the currently selected room
       var currentRoomId;
       $scope.$watchCollection('curDialog', function(dialog) {
         currentRoomId = dialog.peer;
@@ -113,4 +113,3 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
     };
 
   }]);
-

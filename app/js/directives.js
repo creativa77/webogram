@@ -1554,7 +1554,7 @@ angular.module('myApp.directives', ['myApp.filters'])
     }
   })
 
-  .directive('mySendForm', function (_, $q, $timeout, $interval, $window, $compile, $modalStack, $http, $interpolate, Storage, AppStickersManager, AppDocsManager, ErrorService, AppInlineBotsManager, FileManager, shouldFocusOnInteraction) {
+  .directive('mySendForm', function (_, $q, $timeout, $interval, $window, $compile, $modalStack, $http, $interpolate, Storage, AppStickersManager, AppDocsManager, ErrorService, AppInlineBotsManager, FileManager, shouldFocusOnInteraction, RoomService) {
 
     return {
       link: link,
@@ -1795,7 +1795,7 @@ angular.module('myApp.directives', ['myApp.filters'])
               console.warn(dT(), 'got audio', blob)
 
               $scope.$apply(function () {
-                if (blob.size !== undefined && 
+                if (blob.size !== undefined &&
                     blob.size > 1024) {
                   $scope.draftMessage.files = [blob]
                   $scope.draftMessage.isMedia = true
@@ -1849,6 +1849,17 @@ angular.module('myApp.directives', ['myApp.filters'])
 
       function onMessageSubmit (e) {
         $timeout(function () {
+          // EKUCODE: Replace @all with all immedia participants
+          if (/.*@all.*/.test($scope.draftMessage.text)) {
+            var participants = RoomService.getParticipants();
+            var stringifiedParticipants = participants
+              .map((participant, index) => {
+                return "@" + participant.nickname + (index !== participants.length - 1 ? ',' : '')
+              })
+              .join(" ");
+            $scope.draftMessage.text = $scope.draftMessage.text.replace('@all', stringifiedParticipants);
+          }
+
           updateValue()
           $scope.draftMessage.send()
           composer.resetTyping()
