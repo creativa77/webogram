@@ -47,6 +47,10 @@ angular.module('immedia', ['immediaControllers','immediaServices'])
       var currentRoomId;
       $scope.$watchCollection('curDialog', function(dialog) {
         currentRoomId = dialog.peer;
+        // EKUCODE(german-e-mas): Filter the group ID of supergroups.
+        if (currentRoomId.startsWith('s')) {
+          currentRoomId = currentRoomId.substring(0, currentRoomId.indexOf('_'));
+        }
         // if (cfgSvc.isAwarenessEnabled(roomId)) {
         console.log('xxx current room:' + currentRoomId);
       });

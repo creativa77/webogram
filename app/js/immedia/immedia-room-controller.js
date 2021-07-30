@@ -31,6 +31,10 @@
     //Checks for room selection change
     $scope.$watchCollection('curDialog', function(dialog) {
       var roomId = dialog.peer;
+      // EKUCODE(german-e-mas): Filter the group ID of supergroups.
+      if (roomId.startsWith('s')) {
+        roomId = roomId.substring(0, roomId.indexOf('_'));
+      }
 
       if ($scope.roomName === roomId) {
         return;
